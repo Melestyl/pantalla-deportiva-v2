@@ -1,7 +1,7 @@
 /**
  * @file data.c
  * @brief Data Representation Layer Implementation
- * @date 2023-04-24
+ * @date 2024-04-24
  * @version 1.0
  * @authors
  * 	- TELLIER--CALOONE Tom
@@ -33,7 +33,7 @@ void send_dgram_message(socket_t *exchange_socket, buffer_t content, char* ip, i
 	int content_length = strlen(content);
 
 	// Setting up the destination address
-	adr2struct(&dest_addr, ip, port);
+	addr2struct(&dest_addr, ip, port);
 
 	// Using sendto
 	CHECK(sendto(
@@ -48,7 +48,7 @@ void send_dgram_message(socket_t *exchange_socket, buffer_t content, char* ip, i
 }
 
 /**
- * @fn void send_message(socket_t *exchange_socket, generic content, function_pointer serializer_fct, ...)
+ * @fn void send_message(socket_t *exchange_socket, generic content, fct_ptr serializer_fct, ...)
  * @brief send a request/response on a socket (stream or datagram)
  * @param exchange_socket: exchange socket to use for sending
  * @param content: request/response to serialize before sending
@@ -58,7 +58,7 @@ void send_dgram_message(socket_t *exchange_socket, buffer_t content, char* ip, i
  * @note if the mode is DGRAM, the call requires the IP address and the port
  * @result exchange_socket parameter modified for the DGRAM mode
  */
-void send_message(socket_t *exchange_socket, generic content, function_pointer serializer_fct, ...) {
+void send_message(socket_t *exchange_socket, generic content, fct_ptr serializer_fct, ...) {
 	buffer_t serialized_content;
 
 	// Serializing
@@ -118,7 +118,7 @@ void receive_dgram_message(socket_t *exchange_socket, buffer_t content) {
 }
 
 /**
- * @fn void receive_message(socket_t *exchange_socket, generic content, function_pointer deserializer_fct)
+ * @fn void receive_message(socket_t *exchange_socket, generic content, fct_ptr deserializer_fct)
  * @brief receive a request/response on a socket (stream or datagram)
  * @param exchange_socket: exchange socket to use for receiving
  * @param content:	request/response received after deserializing the reception buffer
@@ -126,7 +126,7 @@ void receive_dgram_message(socket_t *exchange_socket, buffer_t content) {
  * @note if the deserializer_fct parameter is NULL then content is a string
  * @result content parameter modified with the received request/response
  */
-void receive_message(socket_t *exchange_socket, generic content, function_pointer deserializer_fct) {
+void receive_message(socket_t *exchange_socket, generic content, fct_ptr deserializer_fct) {
 	buffer_t deserialized_content;
 
 	// Receiving

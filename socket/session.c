@@ -11,13 +11,13 @@
 #include "session.h"
 
 /**
- * @fn void adr2struct(struct sockaddr_in *addr, char *ip_address, short port)
+ * @fn void addr2struct(struct sockaddr_in *addr, char *ip_address, short port)
  * @brief Fill a sockaddr_in structure with an IP address and a port
  * @param addr: pointer to the sockaddr_in structure to fill
  * @param ip_address: IP address
  * @param port: port
  */
-void adr2struct(struct sockaddr_in *addr, char *ip_address, short port) {
+void addr2struct(struct sockaddr_in *addr, char *ip_address, short port) {
 	// Fulfilling the structure
 	addr->sin_family = PF_INET;
 	addr->sin_port = htons(port);
@@ -64,7 +64,7 @@ socket_t create_addressed_socket(int mode, char *ip_address, short port){
 	sock = create_socket(mode);
 
 	// Filling the structure
-	adr2struct(&sock.local_address, ip_address, port);
+	addr2struct(&sock.local_address, ip_address, port);
 
 	// Assigning the address to the socket
 	CHECK(bind(sock.file_descriptor, (struct sockaddr *)&sock.local_address, sizeof(sock.local_address)), "Can't bind socket");
@@ -132,7 +132,7 @@ socket_t connect_to(char *ip_address, short port){
 	sock = create_socket(SOCK_STREAM);
 
 	// Fulfilling the structure of the remote address
-	adr2struct(&sock.remote_address, ip_address, port);
+	addr2struct(&sock.remote_address, ip_address, port);
 
 	// Connecting to the server
 	CHECK(connect(sock.file_descriptor, (struct sockaddr *)&sock.remote_address, sizeof(sock.remote_address)), "Can't connect to remote socket");

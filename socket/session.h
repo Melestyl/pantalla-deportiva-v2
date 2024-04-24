@@ -68,13 +68,13 @@ typedef struct socket socket_t;
  */
 
 /**
- * @fn void adr2struct(struct sockaddr_in *addr, char *ip_address, short port)
+ * @fn void addr2struct(struct sockaddr_in *addr, char *ip_address, short port)
  * @brief Fill a sockaddr_in structure with an IP address and a port
  * @param addr: pointer to the sockaddr_in structure to fill
  * @param ip_address: IP address
  * @param port: port
  */
-void adr2struct (struct sockaddr_in *addr, char *ip_address, short port);
+void addr2struct(struct sockaddr_in *addr, char *ip_address, short port);
 
 /**
  * @fn socket_t create_socket(int mode)
@@ -82,7 +82,7 @@ void adr2struct (struct sockaddr_in *addr, char *ip_address, short port);
  * @param mode: socket mode (SOCK_STREAM or SOCK_DGRAM)
  * @return the created socket
  */
-socket_t create_socket (int mode);
+socket_t create_socket(int mode);
 
 /**
  * @fn socket_t create_socket_adr(int mode, char *ip_address, short port)
@@ -92,7 +92,7 @@ socket_t create_socket (int mode);
  * @param port: port
  * @return socket with the specified address
  */
-socket_t create_addressed_socket (int mode, char *ip_address, short port);
+socket_t create_addressed_socket(int mode, char *ip_address, short port);
 
 /**
  * @fn socket_t create_listen_socket(char *ip_address, short port)
@@ -101,7 +101,7 @@ socket_t create_addressed_socket (int mode, char *ip_address, short port);
  * @param port: server TCP port to listen to
  * @return socket created with the specified address and in a listening state
  */
-socket_t create_listen_socket (char *ip_address, short port);
+socket_t create_listen_socket(char *ip_address, short port);
 
 /**
  * @fn socket_t accept_client(const socket_t listen_socket)
@@ -109,7 +109,7 @@ socket_t create_listen_socket (char *ip_address, short port);
  * @param listen_socket: listening socket
  * @return the socket created for the client
  */
-socket_t accept_client (const socket_t listen_socket);
+socket_t accept_client(const socket_t listen_socket);
 
 /**
  * @fn socket_t connect_to(char *ip_address, short port)
@@ -118,6 +118,6 @@ socket_t accept_client (const socket_t listen_socket);
  * @param port: remote port
  * @return the connected socket
  */
-socket_t connect_to (char *ip_address, short port);
+socket_t connect_to(char *ip_address, short port);
 
 #endif /* SESSION_H */

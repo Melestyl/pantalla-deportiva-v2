@@ -39,17 +39,17 @@ typedef char buffer_t[MAX_BUFFER];
  */
 typedef void * generic;
 /**
- *	@typedef	function_pointer
+ *	@typedef	fct_ptr
  *	@brief		pointer to a generic function with 2 generic parameters
  */
-typedef void (*function_pointer) (generic, generic);
+typedef void (*fct_ptr) (generic, generic);
 /*
 *****************************************************************************************
  *			F U N C T I O N   P R O T O T Y P E S
  */
 
 /**
- * @fn void send_message(socket_t *exchange_socket, generic content, function_pointer serializer_fct, ...)
+ * @fn void send_message(socket_t *exchange_socket, generic content, fct_ptr serializer_fct, ...)
  * @brief send a request/response on a socket (stream or datagram)
  * @param exchange_socket: exchange socket to use for sending
  * @param content: request/response to serialize before sending
@@ -59,10 +59,10 @@ typedef void (*function_pointer) (generic, generic);
  * @note if the mode is DGRAM, the call requires the IP address and the port
  * @result exchange_socket parameter modified for the DGRAM mode
  */
-void send_message(socket_t *exchange_socket, generic content, function_pointer serializer_fct, ...);
+void send_message(socket_t *exchange_socket, generic content, fct_ptr serializer_fct, ...);
 
 /**
- * @fn void receive_message(socket_t *exchange_socket, generic content, function_pointer deserializer_fct)
+ * @fn void receive_message(socket_t *exchange_socket, generic content, fct_ptr deserializer_fct)
  * @brief receive a request/response on a socket (stream or datagram)
  * @param exchange_socket: exchange socket to use for receiving
  * @param content:	request/response received after deserializing the reception buffer
@@ -70,6 +70,6 @@ void send_message(socket_t *exchange_socket, generic content, function_pointer s
  * @note if the deserializer_fct parameter is NULL then content is a string
  * @result content parameter modified with the received request/response
  */
-void receive_message(socket_t *exchange_socket, generic content, function_pointer deserializer_fct);
+void receive_message(socket_t *exchange_socket, generic content, fct_ptr deserializer_fct);
 
 #endif /* DATA_H */
