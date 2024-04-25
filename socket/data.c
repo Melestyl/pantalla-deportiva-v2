@@ -127,18 +127,18 @@ void receive_dgram_message(socket_t *exchange_socket, buffer_t content) {
  * @result content parameter modified with the received request/response
  */
 void receive_message(socket_t *exchange_socket, generic content, fct_ptr deserializer_fct) {
-	buffer_t deserialized_content;
+	buffer_t serialized_content;
 
 	// Receiving
 	if (exchange_socket->mode == SOCK_STREAM)
-		receive_stream_message(exchange_socket, deserialized_content);
+		receive_stream_message(exchange_socket, serialized_content);
 	else
-		receive_dgram_message(exchange_socket, deserialized_content);
+		receive_dgram_message(exchange_socket, serialized_content);
 
 	// Deserializing
 	if (deserializer_fct != NULL)
-		deserializer_fct(content, deserialized_content);
+		deserializer_fct(content, serialized_content);
 	else
-		strcpy((char*) content, deserialized_content);
+		strcpy((char*) content, serialized_content);
 }
 
