@@ -4,6 +4,19 @@
 #include <string.h>
 
 /**
+ * @def MAX_BUFFER
+ * @brief size of a buffer_t for sending/receiving
+
+ */
+#define MAX_BUFFER	1024
+
+/**
+ *	@typedef	buffer_t
+ *	@brief		string to send/receive
+ */
+typedef char buffer_t[MAX_BUFFER];
+
+/**
  * @struct message_t
  * @brief message structure
  * @var code: message code
@@ -11,7 +24,7 @@
  */
 struct message_t {
 	char code;
-	char *data;
+	buffer_t data;
 };
 
 /**
