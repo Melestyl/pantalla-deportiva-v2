@@ -49,7 +49,7 @@ typedef void (*fct_ptr) (generic, generic);
  */
 
 /**
- * @fn void send_message(socket_t *exchange_socket, generic content, fct_ptr serializer_fct, ...)
+ * @fn ssize_t send_message(socket_t *exchange_socket, generic content, fct_ptr serializer_fct, ...)
  * @brief send a request/response on a socket (stream or datagram)
  * @param exchange_socket: exchange socket to use for sending
  * @param content: request/response to serialize before sending
@@ -59,10 +59,10 @@ typedef void (*fct_ptr) (generic, generic);
  * @note if the mode is DGRAM, the call requires the IP address and the port
  * @result exchange_socket parameter modified for the DGRAM mode
  */
-void send_message(socket_t *exchange_socket, generic content, fct_ptr serializer_fct, ...);
+ssize_t send_message(socket_t *exchange_socket, generic content, fct_ptr serializer_fct, ...);
 
 /**
- * @fn void receive_message(socket_t *exchange_socket, generic content, fct_ptr deserializer_fct)
+ * @fn ssize_t receive_message(socket_t *exchange_socket, generic content, fct_ptr deserializer_fct)
  * @brief receive a request/response on a socket (stream or datagram)
  * @param exchange_socket: exchange socket to use for receiving
  * @param content:	request/response received after deserializing the reception buffer
@@ -70,6 +70,6 @@ void send_message(socket_t *exchange_socket, generic content, fct_ptr serializer
  * @note if the deserializer_fct parameter is NULL then content is a string
  * @result content parameter modified with the received request/response
  */
-void receive_message(socket_t *exchange_socket, generic content, fct_ptr deserializer_fct);
+ssize_t receive_message(socket_t *exchange_socket, generic content, fct_ptr deserializer_fct);
 
 #endif /* DATA_H */
