@@ -59,6 +59,7 @@ socket_t create_socket(int mode){
  */
 socket_t create_addressed_socket(int mode, char *ip_address, short port){
 	socket_t sock;
+	socklen_t len;
 
 	// Creating the socket
 	sock = create_socket(mode);
@@ -68,6 +69,10 @@ socket_t create_addressed_socket(int mode, char *ip_address, short port){
 
 	// Assigning the address to the socket
 	CHECK(bind(sock.file_descriptor, (struct sockaddr *)&sock.local_address, sizeof(sock.local_address)), "Can't bind socket");
+
+	// Retrieving the local address
+	len = sizeof(sock.local_address);
+	CHECK(getsockname(sock.file_descriptor, (struct sockaddr *)&sock.local_address, &len), "Can't get local address");
 
 	return sock;
 }
