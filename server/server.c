@@ -1,9 +1,15 @@
+/**
+ * @file server.c
+ * @brief Server side of the application.
+ * @date 2024-04-30
+ */
+
 #include "server.h"
 
-void listen_thread(void* socket);
+socket_t listen_socket; // Declared globally to be closed in the signal handler function
 
 int main(int argc, char** argv) {
-	socket_t listen_socket, client_socket;
+	socket_t client_socket;
 	pthread_t thread;
 	int port = 0; // 0 = default for random
 
@@ -18,6 +24,9 @@ int main(int argc, char** argv) {
 	// Creating STREAM listen socket
 	listen_socket = create_listen_socket("0.0.0.0", port);
 	printf("Listening on port %d\n", ntohs(((struct sockaddr_in*)&listen_socket.local_address)->sin_port));
+
+	// Setting up signal handler to close the socket properly
+	signal(SIGINT, sigint_handler);
 
 	// Accepting clients
 	while (1) {
@@ -34,6 +43,11 @@ int main(int argc, char** argv) {
 	return 0;
 }
 
+/**
+ * @fn void listen_thread(void* socket)
+ * @brief Thread to listen to a client.
+ * @param socket: client socket created after an accept
+ */
 void listen_thread(void* socket) {
 	socket_t* client_socket = (socket_t *) socket;
 	message_t message;
@@ -80,4 +94,15 @@ void listen_thread(void* socket) {
 			fprintf(stderr, "[%s:%d] is trying to authenticate with an unknown role.\n", ip, port);
 			break;
 	}
+}
+
+/**
+ * @fn void sigint_handler(int signum)
+ * @brief Signal handler for SIGINT, closing the socket properly
+ * @param signum: unused
+ */
+void sigint_handler(int signum) {
+	close(listen_socket.file_descriptor);
+	printf("\nServer closed.\n");
+	exit(0);
 }
