@@ -4,16 +4,13 @@ void listen_thread(void* socket);
 
 int main(int argc, char** argv) {
 	socket_t listen_socket, client_socket;
-	char* strtok_pointer;
-	message_t message;
 	pthread_t thread;
-	buffer_t buffer;
 	int port = 0; // 0 = default for random
 
 	// Trying to assign the port following user's choice
 	if (argc > 1) {
 		port = atoi(argv[1]);
-		// If the port isn't correct, set it to 0
+		// If the port isn't correct, setting it to 0
 		if (port < 0 || port > 65535)
 			port = 0;
 	}
