@@ -35,3 +35,14 @@ void deserialize_message(void* content, void* serialized_content) {
 	// Adding the null character
 	message->data[strlen(message->data)] = '\0';
 }
+
+/**
+ * @fn void prepare_message(message_t* message, char code, char* data)
+ * @param message: structure to fill with the message
+ * @param code: message code
+ * @param data: message data
+ */
+void prepare_message(message_t* message, char code, char* data) {
+	message->code = code;
+	strcpy(message->data, data);
+}
