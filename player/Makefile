@@ -10,7 +10,7 @@ all: lib $(FILE_NAME).exe
 
 lib: socket serialization
 
-$(FILE_NAME).exe: $(FILE_NAME).c
+$(FILE_NAME).exe: $(FILE_NAME).c $(FILE_NAME).h
 	$(CC) -o $(FILE_NAME).exe $(FILE_NAME).c $(SOCKET) $(SERIALIZATION) -lpthread
 
 socket:
