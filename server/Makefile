@@ -1,17 +1,17 @@
 CC?=gcc
 RM?=rm -f
 
+FILE_NAME=server
+
 SOCKET=../socket/data.o ../socket/session.o
 SERIALIZATION=../serialization/serialization.o
 
-all: lib server.exe
+all: lib $(FILE_NAME).exe
 
 lib: socket serialization
 
-server.exe: server.o
-	$(CC) -o server.exe server.o $(SOCKET) $(SERIALIZATION) -lpthread
-server.o: server.c server.h
-	$(CC) -c server.c
+$(FILE_NAME).exe: $(FILE_NAME).c
+	$(CC) -o $(FILE_NAME).exe $(FILE_NAME).c $(SOCKET) $(SERIALIZATION) -lpthread
 
 socket:
 	cd ../socket && $(MAKE)
