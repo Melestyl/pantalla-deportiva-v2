@@ -70,22 +70,22 @@ void listen_thread(void* socket) {
 	// Processing auth
 	switch (message.data[0]) {
 		// Player who invites
-		case '0':
+		case '1':
 			printf("[%s:%d] is a player who invites.\n", ip, port);
 			break;
 
 		// Player who is invited
-		case '1':
+		case '2':
 			printf("[%s:%d] is a player who is invited.\n", ip, port);
 			break;
 
 		// Court
-		case '2':
+		case '3':
 			printf("[%s:%d] is a court.\n", ip, port);
 			break;
 
 		// Spectator
-		case '3':
+		case '4':
 			printf("[%s:%d] is a spectator.\n", ip, port);
 			break;
 

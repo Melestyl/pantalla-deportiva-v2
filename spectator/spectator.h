@@ -8,10 +8,10 @@
 #include "../common/codes.h"
 
 /**
- * @def AUTH_TYPE
+ * @def SPECTATOR_AUTH
  * @brief This code is the one to let the server know that the client is a spectator
  */
-#define AUTH_TYPE 3 // 3 = Spectator
+#define SPECTATOR_AUTH 4 // 4 = Spectator
 
 /**
  * @brief Authenticates the spectator
