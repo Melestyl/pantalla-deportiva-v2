@@ -6,6 +6,7 @@
 
 #include "server.h"
 #include "player_functions.h"
+#include "court_functions.h"
 
 socket_t listen_socket; // Declared globally to be closed in the signal handler function
 
@@ -84,6 +85,7 @@ void listen_thread(void* socket) {
 		// Court
 		case '3':
 			printf("[%s:%d] is a court.\n", ip, port);
+			new_court(client_socket, ip);
 			break;
 
 		// Spectator
