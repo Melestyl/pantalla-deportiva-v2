@@ -1,7 +1,8 @@
 #include "court.h"
 
 int main(int argc, char** argv) {
-	socket_t server_socket, listen_socket;
+	socket_t server_socket, listen_socket, player1, player2;
+	pthread_t p1_thread, p2_thread;
 
 	if (argc < 3) {
 		fprintf(stderr, "Usage: %s <ServerIP> <ServerPort>\n", argv[0]);
@@ -20,8 +21,11 @@ int main(int argc, char** argv) {
 	// Sending listen port to server
 	send_listen_port(server_socket, ntohs(((struct sockaddr_in*)&listen_socket.local_address)->sin_port));
 
-	// Closing socket
-	close(server_socket.file_descriptor);
+	// Waiting for incoming connections (2 players)
+	player1 = accept_client(listen_socket);
+	player2 = accept_client(listen_socket);
+
+
 
 	return 0;
 }
@@ -58,4 +62,20 @@ void send_listen_port(socket_t socket, int port) {
 
 	// Sending the message
 	send_message(&socket, &message, serialize_message);
+}
+
+/**
+ * @brief Thread for the player
+ * @param player_socket: Player socket
+ */
+void player_thread(void* player_socket) {
+	socket_t* player = (socket_t*) player_socket;
+	message_t received_msg;
+
+	// Waiting for any score-increment update
+	receive_message(player, &received_msg, deserialize_message);
+
+	if (received_msg.code == (char) INCREMENT_SCORE) {
+		printf("Score incremented\n");
+	}
 }
