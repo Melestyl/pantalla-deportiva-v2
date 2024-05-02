@@ -28,7 +28,7 @@ void authenticate(socket_t socket) {
 	message_t message;
 	char data[2];
 
-	sprintf(data, "%d", AUTH_TYPE); // Converting AUTH_TYPE to a string
+	sprintf(data, "%d", SPECTATOR_AUTH); // Converting SPECTATOR_AUTH to a string
 
 	// Preparing the authentication message
 	prepare_message(&message, AUTH, data);
