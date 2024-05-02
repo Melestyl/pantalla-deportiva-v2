@@ -62,7 +62,7 @@ void listen_thread(void* socket) {
 
 	// Rejecting if the client is not trying to authenticate first
 	if (message.code != AUTH) {
-		fprintf(stderr, "[%s:%d] has sent a non-auth request and is not authentified.\n", ip, port);
+		fprintf(stderr, "[%s:%d] has sent a non-auth request and is not authenticated.\n", ip, port);
 		close(client_socket->file_descriptor);
 		return;
 	}
