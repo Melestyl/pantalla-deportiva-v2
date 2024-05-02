@@ -4,6 +4,7 @@ int main(int argc, char** argv) {
 	socket_t socket;
 	buffer_t first_name, last_name;
 	char choice;
+	message_t received_message;
 
 	if (argc < 3) {
 		fprintf(stderr, "Usage: %s <ServerIP> <ServerPort>\n", argv[0]);
@@ -33,6 +34,15 @@ int main(int argc, char** argv) {
 		case '1':
 			// Authenticating as an invited player
 			authenticate(socket, INVITED_AUTH, first_name, last_name);
+
+			// Getting the player's ID as a response
+			receive_message(&socket, &received_message, deserialize_message);
+			if (received_message.code == INFO_PLAYER)
+				printf("Votre ID est : %s\n", received_message.data);
+			else {
+				printf("Erreur lors de la réception de l'ID\n");
+				return 1;
+			}
 			break;
 		case '2':
 			// Authenticating as an inviting player

@@ -5,6 +5,7 @@
  */
 
 #include "server.h"
+#include "player_functions.h"
 
 socket_t listen_socket; // Declared globally to be closed in the signal handler function
 
@@ -77,6 +78,7 @@ void listen_thread(void* socket) {
 		// Player who is invited
 		case '2':
 			printf("[%s:%d] is a player who is invited.\n", ip, port);
+			invited_player(client_socket, message.data);
 			break;
 
 		// Court
