@@ -6,9 +6,14 @@
 
 #include "court.h"
 
+score_t score; // Global score
+pthread_mutex_t score_mutex = PTHREAD_MUTEX_INITIALIZER; // Mutex for the score
+
 int main(int argc, char** argv) {
 	socket_t server_socket, listen_socket, player1, player2;
 	pthread_t p1_thread, p2_thread;
+	message_t send_msg, received_msg;
+	player_data_t player1_data, player2_data; // Structure used to pass two arguments to the player_thread function
 
 	if (argc < 3) {
 		fprintf(stderr, "Usage: %s <ServerIP> <ServerPort>\n", argv[0]);
@@ -25,15 +30,43 @@ int main(int argc, char** argv) {
 	listen_socket = create_listen_socket("0.0.0.0", 0);
 
 	// Sending listen port to server
-	send_listen_port(server_socket, ntohs(((struct sockaddr_in*)&listen_socket.local_address)->sin_port));
+	send_listen_port(
+			server_socket,
+			ntohs(((struct sockaddr_in*)&listen_socket.local_address)->sin_port)
+	);
 
 	// Waiting for incoming connections (2 players)
 	player1 = accept_client(listen_socket);
+	printf("Player 1 connected\n");
 	player2 = accept_client(listen_socket);
+	printf("Player 2 connected\n");
 
-	//TODO: Initializing score
+	// Initializing score
+	init_score();
 
-	//TODO: Creating threads for the players
+	// Creating player data for both of them
+	player1_data.socket = &player1;
+	player1_data.player_number = 1;
+	player2_data.socket = &player2;
+	player2_data.player_number = 2;
+
+	// Creating threads for the players
+	pthread_create(&p1_thread, NULL, (void*) player_thread, (void*) &player1_data);
+	pthread_create(&p2_thread, NULL, (void*) player_thread, (void*) &player2_data);
+
+	// Waiting for the game to finish, ending threads
+	while (!is_match_finished())
+		sleep(1);
+	pthread_cancel(p1_thread);
+	pthread_cancel(p2_thread);
+
+	// Send an END_MATCH message to the server
+	send_end_match(server_socket);
+
+	//TODO: Nest it in a while loop to accept multiple games
+	//TODO: Handle Ctrl + C to close sockets
+	//TODO: Send update score to the server
+	//TODO: Create a serializer function for the score
 
 	return 0;
 }
@@ -83,17 +116,137 @@ void send_listen_port(socket_t socket, int port) {
 }
 
 /**
- * @brief Thread for the player
- * @param player_socket: Player socket
+ * @fn void init_score(score_t *score)
+ * @brief Initializes the score structure
  */
-void player_thread(void* player_socket) {
-	socket_t* player = (socket_t*) player_socket;
+void init_score() {
+	pthread_mutex_lock(&score_mutex);
+
+	score.player1 = LOVE;
+	score.player2 = LOVE;
+	score.player1_games[0] = 0;
+	score.player1_games[1] = 0;
+	score.player1_games[2] = 0;
+	score.player2_games[0] = 0;
+	score.player2_games[1] = 0;
+	score.player2_games[2] = 0;
+	score.player1_sets = 0;
+	score.player2_sets = 0;
+	score.current_set = 0;
+
+	pthread_mutex_unlock(&score_mutex);
+}
+
+/**
+ * @fn int is_match_finished()
+ * @brief Checks if the match is finished by looking at the sets won by each player
+ * @return 1 if the match is finished, 0 otherwise
+ */
+int is_match_finished() {
+	return (score.player1_sets == 2 || score.player2_sets == 2);
+}
+
+/**
+ * @fn void increment_score(int player)
+ * @brief Increments the score of a player
+ * @param player: Player to increment the score (1 or 2)
+ */
+void increment_score(int player) {
+	int *player_score, *opponent_score, *player_games, *opponent_games, *player_sets;
+
+	pthread_mutex_lock(&score_mutex);
+
+	if (player == 1) {
+		player_score = &score.player1;
+		opponent_score = &score.player2;
+		player_games = score.player1_games;
+		opponent_games = score.player2_games;
+		player_sets = &score.player1_sets;
+	}
+	else {
+		player_score = &score.player2;
+		opponent_score = &score.player1;
+		player_games = score.player2_games;
+		opponent_games = score.player1_games;
+		player_sets = &score.player2_sets;
+	}
+
+	switch (*player_score) {
+		case LOVE:
+		case FIFTEEN:
+		case THIRTY:
+			*(player_score)++;
+			break;
+		case FORTY:
+			if (*opponent_score == FORTY)
+				*player_score = ADVANTAGE;
+			else if (*opponent_score == ADVANTAGE)
+				*opponent_score = FORTY;
+			else {
+				player_games[score.current_set]++;
+				*player_score = LOVE;
+				*opponent_score = LOVE;
+			}
+			break;
+		case ADVANTAGE:
+			player_games[score.current_set]++;
+			*player_score = LOVE;
+			*opponent_score = LOVE;
+			break;
+	}
+
+	// If the set is finished, increment the current set (and increment the winner's set count)
+	if ((player_games[score.current_set] == 6 && opponent_games[score.current_set] <= 4)
+	|| (player_games[score.current_set] == 7)) {
+		score.current_set++;
+		(*player_sets)++;
+	}
+
+	pthread_mutex_unlock(&score_mutex);
+}
+
+/**
+ * @fn void player_thread(void* player_data)
+ * @brief Thread for the player
+ * @param player_data: Structure containing the player's socket and number
+ */
+void player_thread(void* player_data) {
+	player_data_t* player = ((player_data_t*) player_data);
 	message_t received_msg;
 
 	// Waiting for any score-increment update
-	receive_message(player, &received_msg, deserialize_message);
+	while (!is_match_finished()) {
+		receive_message(player->socket, &received_msg, deserialize_message);
 
-	if (received_msg.code == (char) INCREMENT_SCORE) {
-		printf("Score incremented\n");
+		if (received_msg.code == (char) INCREMENT_SCORE) {
+			if (!is_match_finished()) {
+				// Incrementing the score
+				increment_score(player->player_number);
+				printf("Score incremented by player %d\n", player->player_number);
+
+				// Sending the updated score to the server
+				//TODO:send_score_to_server(player->socket);
+			}
+		}
 	}
+}
+
+/**
+ * @fn void send_end_match(socket_t socket)
+ * @brief Sends an END_MATCH message to the server
+ * @param socket: Server socket
+ */
+void send_end_match(socket_t socket) {
+	message_t message;
+
+	// Sending END_MATCH
+	prepare_message(&message, END_MATCH, "");
+	send_message(&socket, &message, serialize_message);
+
+	// Waiting for OK
+	receive_message(&socket, &message, deserialize_message);
+	if (message.code == (char) OK)
+		printf("Match ended successfully (server is OK).\n");
+	else
+		printf("Match ended unsuccessfully (server is NOK). Please reload the court.\n");
 }
