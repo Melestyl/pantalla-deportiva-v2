@@ -28,4 +28,18 @@
  */
 void authenticate(socket_t socket, char type, char* first_name, char* last_name);
 
+/**
+ * @fn void wait_for_partner(socket_t socket)
+ * @brief Function for the player waiting for an invitation
+ * @param socket: Server socket
+ */
+void wait_for_partner(socket_t socket);
+
+/**
+ * @fn void invited_player(socket_t socket)
+ * @brief Function for the invited player
+ * @param socket: Server socket
+ */
+void invited_player(socket_t socket);
+
 #endif //PANTALLA_DEPORTIVA_V2_PLAYER_H
