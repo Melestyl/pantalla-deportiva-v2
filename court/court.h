@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include <pthread.h>
+#include <signal.h>
 
 #include "../socket/data.h"
 #include "../serialization/serialization.h"
@@ -118,6 +119,12 @@ int is_match_finished();
 void increment_score(int player);
 
 /**
+ * @fn void send_score_to_server()
+ * @brief Sends an update message to the server with the current score
+ */
+void send_score_to_server();
+
+/**
  * @fn void player_thread(void* player_data)
  * @brief Thread for the player
  * @param player_data: Structure containing the player's socket and number
@@ -130,5 +137,12 @@ void player_thread(void* player_data);
  * @param socket: Server socket
  */
 void send_end_match(socket_t socket);
+
+/**
+ * @fn void sigint_handler(int signum)
+ * @brief Signal handler for SIGINT, closing the socket properly
+ * @param signum: unused
+ */
+void sigint_handler(int signum);
 
 #endif //PANTALLA_DEPORTIVA_V2_COURT_H

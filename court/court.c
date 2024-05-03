@@ -6,11 +6,13 @@
 
 #include "court.h"
 
+socket_t listen_socket, server_socket; // Declared globally to be accessed from functions
+
 score_t score; // Global score
 pthread_mutex_t score_mutex = PTHREAD_MUTEX_INITIALIZER; // Mutex for the score
 
 int main(int argc, char** argv) {
-	socket_t server_socket, listen_socket, player1, player2;
+	socket_t player1, player2;
 	pthread_t p1_thread, p2_thread;
 	message_t send_msg, received_msg;
 	player_data_t player1_data, player2_data; // Structure used to pass two arguments to the player_thread function
@@ -22,6 +24,9 @@ int main(int argc, char** argv) {
 
 	// Connecting to the server
 	server_socket = connect_to(argv[1], atoi(argv[2]));
+
+	// Setting up signal handler to close the socket properly
+	signal(SIGINT, sigint_handler);
 
 	// Authenticating
 	authenticate(server_socket);
@@ -35,40 +40,35 @@ int main(int argc, char** argv) {
 			ntohs(((struct sockaddr_in*)&listen_socket.local_address)->sin_port)
 	);
 
-	// Waiting for incoming connections (2 players)
-	player1 = accept_client(listen_socket);
-	printf("Player 1 connected\n");
-	player2 = accept_client(listen_socket);
-	printf("Player 2 connected\n");
+	while (1) {
+		// Waiting for incoming connections (2 players)
+		player1 = accept_client(listen_socket);
+		printf("Player 1 connected\n");
+		player2 = accept_client(listen_socket);
+		printf("Player 2 connected\n");
 
-	// Initializing score
-	init_score();
+		// Initializing score
+		init_score();
 
-	// Creating player data for both of them
-	player1_data.socket = &player1;
-	player1_data.player_number = 1;
-	player2_data.socket = &player2;
-	player2_data.player_number = 2;
+		// Creating player data for both of them
+		player1_data.socket = &player1;
+		player1_data.player_number = 1;
+		player2_data.socket = &player2;
+		player2_data.player_number = 2;
 
-	// Creating threads for the players
-	pthread_create(&p1_thread, NULL, (void*) player_thread, (void*) &player1_data);
-	pthread_create(&p2_thread, NULL, (void*) player_thread, (void*) &player2_data);
+		// Creating threads for the players
+		pthread_create(&p1_thread, NULL, (void *) player_thread, (void *) &player1_data);
+		pthread_create(&p2_thread, NULL, (void *) player_thread, (void *) &player2_data);
 
-	// Waiting for the game to finish, ending threads
-	while (!is_match_finished())
-		sleep(1);
-	pthread_cancel(p1_thread);
-	pthread_cancel(p2_thread);
+		// Waiting for the game to finish, ending threads
+		while (!is_match_finished())
+			sleep(1);
+		pthread_cancel(p1_thread);
+		pthread_cancel(p2_thread);
 
-	// Send an END_MATCH message to the server
-	send_end_match(server_socket);
-
-	//TODO: Nest it in a while loop to accept multiple games
-	//TODO: Handle Ctrl + C to close sockets
-	//TODO: Send update score to the server
-	//TODO: Create a serializer function for the score
-
-	return 0;
+		// Send an END_MATCH message to the server
+		send_end_match(server_socket);
+	}
 }
 
 /**
@@ -203,6 +203,43 @@ void increment_score(int player) {
 	}
 
 	pthread_mutex_unlock(&score_mutex);
+
+	printf("Score incremented by player %d\n", player);
+}
+
+/**
+ * @fn void send_score_to_server()
+ * @brief Sends an update message to the server with the current score
+ */
+void send_score_to_server() {
+	message_t send_msg;
+	buffer_t data;
+
+	pthread_mutex_lock(&score_mutex);
+
+	// Formatting data
+	sprintf(data, "%d/%d:%d/%d:%d/%d:%d/%d",
+			score.player1, score.player2,
+			score.player1_games[0], score.player2_games[0],
+			score.player1_games[1], score.player2_games[1],
+			score.player1_games[2], score.player2_games[2]
+	);
+	// Formatted examples:
+	// 30/30:4/2:0/0:0/0
+	// 40/15:6/1:4/2:0/0
+
+	pthread_mutex_unlock(&score_mutex);
+
+	// Sending message
+	prepare_message(&send_msg, SCORE, data);
+	send_message(&server_socket, &send_msg, serialize_message);
+
+	// Waiting for OK
+	receive_message(&server_socket, &send_msg, deserialize_message);
+	if (send_msg.code == (char) OK)
+		printf("Score sent to the server successfully.\n");
+	else
+		printf("Server has answered NOK when updating the score.\n");
 }
 
 /**
@@ -222,10 +259,9 @@ void player_thread(void* player_data) {
 			if (!is_match_finished()) {
 				// Incrementing the score
 				increment_score(player->player_number);
-				printf("Score incremented by player %d\n", player->player_number);
 
 				// Sending the updated score to the server
-				//TODO:send_score_to_server(player->socket);
+				send_score_to_server();
 			}
 		}
 	}
@@ -249,4 +285,16 @@ void send_end_match(socket_t socket) {
 		printf("Match ended successfully (server is OK).\n");
 	else
 		printf("Match ended unsuccessfully (server is NOK). Please reload the court.\n");
+}
+
+/**
+ * @fn void sigint_handler(int signum)
+ * @brief Signal handler for SIGINT, closing the socket properly
+ * @param signum: unused
+ */
+void sigint_handler(int signum) {
+	close(listen_socket.file_descriptor);
+	close(server_socket.file_descriptor);
+	printf("\nCourt closed.\n");
+	exit(0);
 }
