@@ -1,3 +1,9 @@
+/**
+ * @file court.c
+ * @brief Court module
+ * @date 2024-05-01
+ */
+
 #include "court.h"
 
 int main(int argc, char** argv) {
@@ -25,11 +31,17 @@ int main(int argc, char** argv) {
 	player1 = accept_client(listen_socket);
 	player2 = accept_client(listen_socket);
 
+	//TODO: Initializing score
 
+	//TODO: Creating threads for the players
 
 	return 0;
 }
 
+/**
+ * @brief Authenticates the spectator
+ * @param socket: Server socket
+ */
 void authenticate(socket_t socket) {
 	message_t message;
 	char data[2];
@@ -51,6 +63,12 @@ void authenticate(socket_t socket) {
 		printf("Authentication failed\n");
 }
 
+
+/**
+ * @brief Sends the listen port to the server
+ * @param socket: Server socket
+ * @param port: Listen port
+ */
 void send_listen_port(socket_t socket, int port) {
 	message_t message;
 	char data[6];
