@@ -74,6 +74,7 @@ void listen_thread(void* socket) {
 		// Player who invites
 		case '1':
 			printf("[%s:%d] is a player who invites.\n", ip, port);
+			host_player(client_socket, message.data);
 			break;
 
 		// Player who is invited
