@@ -68,6 +68,11 @@ int main(int argc, char** argv) {
 
 		// Send an END_MATCH message to the server
 		send_end_match(server_socket);
+
+		// Sending and END_MATCH message to the players
+		prepare_message(&send_msg, END_MATCH, "");
+		send_message(&player1, &send_msg, serialize_message);
+		send_message(&player2, &send_msg, serialize_message);
 	}
 }
 
