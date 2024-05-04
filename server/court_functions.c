@@ -9,7 +9,7 @@
 court_node_t* courts = NULL; // Global list of courts
 pthread_mutex_t courts_mutex = PTHREAD_MUTEX_INITIALIZER; // Mutex for the global list of courts
 
-int court_id_counter = 0; // Global counter for court ids
+int court_id_counter = 1; // Global counter for court ids
 pthread_mutex_t court_id_counter_mutex = PTHREAD_MUTEX_INITIALIZER; // Mutex for the global counter of court ids
 
 /**
@@ -93,6 +93,9 @@ void new_court(void* socket, char* ip) {
 	// Marking court as available
 	court.available = 1;
 
+	// Initializing the score
+	strcpy(court.score, "0-0:0/0:0/0:0/0");
+
 	// Adding the court to the list
 	add_court(court);
 	printf("Court %d is available for players with %s:%d\n", court.id, court.ip, court.listen_port);
@@ -100,8 +103,6 @@ void new_court(void* socket, char* ip) {
 	// Responding OK to the court
 	prepare_message(&send_msg, (char) OK, "");
 	send_message(socket, &send_msg, serialize_message);
-
-	//TODO: Wait for any score update
 }
 
 /**
@@ -121,6 +122,23 @@ court_t* get_first_available_court() {
 
 	// Returning NULL otherwise
 	return NULL;
+}
+
+/**
+ * @fn void listen_for_score(court_t* court)
+ * @brief Listens for score and END_MATCH messages
+ * @param court: court structure with all data
+ */
+void listen_for_score(court_t* court) {
+	message_t received_msg;
+
+	do {
+		receive_message(court->socket, &received_msg, deserialize_message);
+		if (received_msg.code == (char) SCORE) {
+			strcpy(court->score, received_msg.data);
+			printf("Court %d: %s\n", court->id, court->score);
+		}
+	} while (received_msg.code != (char) END_MATCH);
 }
 
 /**
@@ -152,4 +170,128 @@ void reserve_court(player_t p1, player_t p2) {
 	prepare_message(&send_msg, (char) COURT_FOUND, data);
 	send_message(p1.socket, &send_msg, serialize_message);
 	send_message(p2.socket, &send_msg, serialize_message);
+
+	// Listening for SCORE and END_MATCH
+	listen_for_score(court);
+}
+
+/**
+ * @fn list_courts(socket_t socket)
+ * @brief Send a list of courts to a spectator
+ * @param socket: spectator's socket
+ */
+void list_courts(socket_t socket) {
+	court_node_t* current = courts;
+	message_t send_msg;
+	buffer_t data, tmp;
+
+	// Preparing the list of courts
+	strcpy(data, "");
+	while (current != NULL) {
+		sprintf(tmp, "%d\n", current->court.id);
+		strcat(data, tmp);
+		current = current->next;
+	}
+
+	// Sending the list of courts
+	prepare_message(&send_msg, (char) LIST_COURTS, data);
+	send_message(&socket, &send_msg, serialize_message);
+}
+
+/**
+ * @fn subscribe_to_court(socket_t socket, int court_id)
+ * @param socket: spectator's socket
+ * @param court_id: court's id
+ * @return court_t*: court structure to read score afterwards, NULL if the court does not exist
+ */
+court_t* subscribe_to_court(socket_t socket, int court_id) {
+	court_node_t* current = courts;
+	message_t send_msg;
+
+	// Searching for the court
+	while (current != NULL) {
+		if (current->court.id == court_id) {
+			// Sending the subscription message
+			prepare_message(&send_msg, (char) OK, "");
+			send_message(&socket, &send_msg, serialize_message);
+
+			return &current->court;
+		}
+		current = current->next;
+	}
+
+	// Sending NOK if the court does not exist
+	prepare_message(&send_msg, (char) NOK, "");
+	send_message(&socket, &send_msg, serialize_message);
+	return NULL;
+
+}
+
+/**
+ * @fn void watch(socket_t socket, court_t court)
+ * @brief Listens for score and sends update to the spectator
+ * @param spectator_socket: spectator's socket
+ * @param court: court to watch for score
+ */
+void watch(socket_t spectator_socket, court_t* court) {
+	message_t send_msg;
+	court_t court_copy; // For detecting changes in the score
+
+	// Copying the court score to detect further changes
+	strcpy(court_copy.score, court->score);
+
+	// Sending the current score
+	sleep(1);
+	prepare_message(&send_msg, (char) SCORE, court_copy.score);
+	send_message(&spectator_socket, &send_msg, serialize_message);
+	sleep(1);
+
+	// Listening for changes in the score while the court is taken by the two players
+	while (1) {
+		if (strcmp(court_copy.score, court->score) != 0) {
+			strcpy(court_copy.score, court->score);
+			prepare_message(&send_msg, (char) SCORE, court_copy.score);
+			if (send_message(&spectator_socket, &send_msg, serialize_message) == -1)
+				break;
+			sleep(1);
+		}
+	}
+}
+
+/**
+ * @fn spectator_function(socket_t socket)
+ * @brief Function to manage a spectator
+ * @param socket: spectator's socket
+ */
+void spectator_function(socket_t* socket) {
+	message_t send_msg, received_msg;
+	int subscribed = 0;
+	court_t* court;
+
+	sleep(1);
+
+	// Answering OK
+	prepare_message(&send_msg, (char) OK, "");
+	send_message(socket, &send_msg, serialize_message);
+	sleep(1);
+
+	do {
+		receive_message(socket, &received_msg, deserialize_message);
+
+		switch (received_msg.code) {
+			case ASK_COURTS:
+				printf("Spectator is asking for the list of courts\n");
+				list_courts(*socket);
+				break;
+			case SUBSCRIBE:
+				printf("Spectator wants to subscribe to court %s\n", received_msg.data);
+				court = subscribe_to_court(*socket, atoi(received_msg.data));
+				if (court != NULL) {
+					subscribed = 1;
+					printf("Spectator has subscribed to court %d\n", court->id);
+					watch(*socket, court);
+				}
+				break;
+		}
+	} while (!subscribed);
 }

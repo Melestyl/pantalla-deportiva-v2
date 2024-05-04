@@ -10,7 +10,7 @@
 player_node_t* players = NULL; // Global list of players
 pthread_mutex_t players_mutex = PTHREAD_MUTEX_INITIALIZER; // Mutex for the global list of players
 
-int player_id_counter = 0; // Global counter for player ids
+int player_id_counter = 1; // Global counter for player ids
 pthread_mutex_t id_counter_mutex = PTHREAD_MUTEX_INITIALIZER; // Mutex for the global counter of player ids
 
 /**

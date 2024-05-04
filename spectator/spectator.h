@@ -19,4 +19,18 @@
  */
 void authenticate(socket_t socket);
 
+/**
+ * @fn void select_and_subscribe(socket_t socket)
+ * @brief Selects a court and subscribes to it
+ * @param socket Server socket
+ */
+void select_and_subscribe(socket_t socket);
+
+/**
+ * @fn void listen_for_score(socket_t socket)
+ * @brief Listens for SCORE requests and displays them
+ * @param socket Server socket
+ */
+void listen_for_score(socket_t socket);
+
 #endif //PANTALLA_DEPORTIVA_V2_SPECTATOR_H
