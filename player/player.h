@@ -42,4 +42,18 @@ void wait_for_partner(socket_t socket);
  */
 void invited_player(socket_t socket);
 
+/**
+ * @fn void print_list_of_players(char* data)
+ * @brief Prints the list of players in a beautiful way
+ * @param data: Data received from the server (formatted list of players)
+ */
+void print_list_of_players(char* data);
+
+/**
+ * @fn void invite_partner(socket_t socket)
+ * @brief Function to invite a partner
+ * @param socket: Server socket
+ */
+void invite_partner(socket_t socket);
+
 #endif //PANTALLA_DEPORTIVA_V2_PLAYER_H

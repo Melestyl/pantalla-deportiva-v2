@@ -4,7 +4,6 @@ int main(int argc, char** argv) {
 	socket_t socket;
 	buffer_t first_name, last_name;
 	char choice;
-	message_t received_message;
 
 	if (argc < 3) {
 		fprintf(stderr, "Usage: %s <ServerIP> <ServerPort>\n", argv[0]);
@@ -42,12 +41,18 @@ int main(int argc, char** argv) {
 		case '2':
 			// Authenticating as an inviting player
 			authenticate(socket, HOST_AUTH, first_name, last_name);
+
+			// Inviting a partner
+			invite_partner(socket);
 			break;
 
 		default:
 			fprintf(stderr, "Choix invalide\n");
 			exit(1);
 	}
+
+	//TODO: Receiving the court
+	//TODO: Match mode
 
 	// Closing socket
 	close(socket.file_descriptor);
@@ -101,7 +106,7 @@ void wait_for_partner(socket_t socket) {
 		// Waiting to receive an INVITE from the server
 		receive_message(&socket, &received_msg, deserialize_message);
 		if (received_msg.code != INVITE) {
-			printf("Erreur lors de la réception de l'invitation\n");
+			fprintf(stderr, "Erreur lors de la réception de l'invitation\n");
 			exit(1);
 		}
 
@@ -148,12 +153,81 @@ void invited_player(socket_t socket) {
 	if (received_msg.code == INFO_PLAYER)
 		printf("Votre ID est : %s\n", received_msg.data);
 	else {
-		printf("Erreur lors de la réception de l'ID\n");
+		fprintf(stderr, "Erreur lors de la réception de l'ID\n");
 		exit(1);
 	}
 
 	// Waiting for a partner
 	wait_for_partner(socket);
+}
 
-	//TODO: Match mode
+/**
+ * @fn void print_list_of_players(char* data)
+ * @brief Prints the list of players in a beautiful way
+ * @param data: Data received from the server (formatted list of players)
+ */
+void print_list_of_players(char* data) {
+	char *save_ptr, *number, *last_name, *first_name;
+
+	if (data == NULL) {
+		printf("Aucun joueur n'est connecté\n");
+		return;
+	}
+
+	do {
+		number = strtok_r(data, ":", &save_ptr);
+		last_name = strtok_r(NULL, ":", &save_ptr);
+		first_name = strtok_r(NULL, ":", &save_ptr);
+		printf("-> [%s] %s %s\n", number, last_name, first_name);
+	} while (number != NULL && last_name != NULL && first_name != NULL);
+}
+
+/**
+ * @fn void invite_partner(socket_t socket)
+ * @brief Function to invite a partner
+ * @param socket: Server socket
+ */
+void invite_partner(socket_t socket) {
+	message_t send_msg, received_msg;
+	buffer_t data;
+	int choice;
+
+	do {
+		// Asking for who to invite
+		printf("Qui voulez-vous inviter ? (numéro de joueur)\n"
+		       "(0 pour afficher la liste des joueurs)\n\n"
+		       "Numéro : ");
+
+		// Getting user's choice
+		scanf("%d", &choice);
+
+		// Printing the list of players if asked
+		if (choice == 0) {
+			// Sending the request
+			prepare_message(&send_msg, ASK_PLAYERS, "");
+			send_message(&socket, &send_msg, serialize_message);
+
+			// Receiving the list of players
+			receive_message(&socket, &received_msg, deserialize_message);
+			if (received_msg.code == LIST_PLAYERS)
+				print_list_of_players(received_msg.data);
+			else
+				fprintf(stderr, "Erreur lors de la réception de la liste des joueurs\n");
+		}
+
+		// Inviting the player
+		else if (choice != 0) {
+			// Sending the invitation
+			sprintf(data, "%d", choice); // Player's ID
+			prepare_message(&send_msg, PLAY_WITH, data);
+			send_message(&socket, &send_msg, serialize_message);
+
+			// Waiting for the response of the player
+			receive_message(&socket, &received_msg, deserialize_message);
+			if (received_msg.code == (char) OK)
+				printf("Invitation acceptée par le joueur !\n");
+			else
+				printf("Le partenaire a refusé ou n'existe pas.\nVeuillez choisir un autre partenaire\n");
+		}
+	} while (choice == 0 || received_msg.code != (char) OK);
 }
