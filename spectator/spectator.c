@@ -14,6 +14,9 @@ int main(int argc, char** argv) {
 	// Authenticating
 	authenticate(socket);
 
+	//TODO: Allow for asking the list of courts, and subscribe to one
+	//TODO: If one court is selected, listen for SCORE requests and display them
+
 	// Closing socket
 	close(socket.file_descriptor);
 
