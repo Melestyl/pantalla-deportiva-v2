@@ -1,0 +1,148 @@
+\hypertarget{session_8c}{}\doxysection{socket/session.c File Reference}
+\label{session_8c}\index{socket/session.c@{socket/session.c}}
+
+
+Session Layer Implementation.  
+
+
+{\ttfamily \#include \char`\"{}session.\+h\char`\"{}}\newline
+Include dependency graph for session.\+c\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{session_8c__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{session_8c_ad8fed10b7f55c1b0845165cc813b161f}{addr2struct}} (struct sockaddr\+\_\+in $\ast$addr, char $\ast$ip\+\_\+address, short port)
+\begin{DoxyCompactList}\small\item\em Fill a sockaddr\+\_\+in structure with an IP address and a port. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{session_8h_a5ef0f2ca252f36a0c8d046d2eb67b416}{socket\+\_\+t}} \mbox{\hyperlink{session_8c_a3e7c97f72ebb708631ae21453fb366d7}{create\+\_\+socket}} (int mode)
+\begin{DoxyCompactList}\small\item\em Create a socket. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{session_8c_a2b95ce01ee8594a6a826769787f0000b}\label{session_8c_a2b95ce01ee8594a6a826769787f0000b}} 
+\mbox{\hyperlink{session_8h_a5ef0f2ca252f36a0c8d046d2eb67b416}{socket\+\_\+t}} {\bfseries create\+\_\+addressed\+\_\+socket} (int mode, char $\ast$ip\+\_\+address, short port)
+\item 
+\mbox{\hyperlink{session_8h_a5ef0f2ca252f36a0c8d046d2eb67b416}{socket\+\_\+t}} \mbox{\hyperlink{session_8c_aca1cbe2dc8df88c5c93721cb37c48a5f}{create\+\_\+listen\+\_\+socket}} (char $\ast$ip\+\_\+address, short port)
+\begin{DoxyCompactList}\small\item\em Create a listening socket with the specified address. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{session_8h_a5ef0f2ca252f36a0c8d046d2eb67b416}{socket\+\_\+t}} \mbox{\hyperlink{session_8c_af31cbd880caa0547b0c6bea3a503d591}{accept\+\_\+client}} (const \mbox{\hyperlink{session_8h_a5ef0f2ca252f36a0c8d046d2eb67b416}{socket\+\_\+t}} listen\+\_\+socket)
+\begin{DoxyCompactList}\small\item\em Accept a client connection. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{session_8h_a5ef0f2ca252f36a0c8d046d2eb67b416}{socket\+\_\+t}} \mbox{\hyperlink{session_8c_ac68558989673f1c8ddaa6e9b67e16438}{connect\+\_\+to}} (char $\ast$ip\+\_\+address, short port)
+\begin{DoxyCompactList}\small\item\em Connect to another socket (client or server) \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Session Layer Implementation. 
+
+\begin{DoxyDate}{Date}
+2024-\/04-\/24 
+\end{DoxyDate}
+\begin{DoxyVersion}{Version}
+1.\+0 
+\end{DoxyVersion}
+\begin{DoxyAuthor}{Authors}
+
+\begin{DoxyItemize}
+\item TELLIER--CALOONE Tom
+\item DELANNOY Anaël 
+\end{DoxyItemize}
+\end{DoxyAuthor}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{session_8c_af31cbd880caa0547b0c6bea3a503d591}\label{session_8c_af31cbd880caa0547b0c6bea3a503d591}} 
+\index{session.c@{session.c}!accept\_client@{accept\_client}}
+\index{accept\_client@{accept\_client}!session.c@{session.c}}
+\doxysubsubsection{\texorpdfstring{accept\_client()}{accept\_client()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{session_8h_a5ef0f2ca252f36a0c8d046d2eb67b416}{socket\+\_\+t}} accept\+\_\+client (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{session_8h_a5ef0f2ca252f36a0c8d046d2eb67b416}{socket\+\_\+t}}}]{listen\+\_\+socket }\end{DoxyParamCaption})}
+
+
+
+Accept a client connection. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em listen\+\_\+socket} & listening socket \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the socket created for the client 
+\end{DoxyReturn}
+\mbox{\Hypertarget{session_8c_ad8fed10b7f55c1b0845165cc813b161f}\label{session_8c_ad8fed10b7f55c1b0845165cc813b161f}} 
+\index{session.c@{session.c}!addr2struct@{addr2struct}}
+\index{addr2struct@{addr2struct}!session.c@{session.c}}
+\doxysubsubsection{\texorpdfstring{addr2struct()}{addr2struct()}}
+{\footnotesize\ttfamily void addr2struct (\begin{DoxyParamCaption}\item[{struct sockaddr\+\_\+in $\ast$}]{addr,  }\item[{char $\ast$}]{ip\+\_\+address,  }\item[{short}]{port }\end{DoxyParamCaption})}
+
+
+
+Fill a sockaddr\+\_\+in structure with an IP address and a port. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em addr} & pointer to the sockaddr\+\_\+in structure to fill \\
+\hline
+{\em ip\+\_\+address} & IP address \\
+\hline
+{\em port} & port \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{session_8c_ac68558989673f1c8ddaa6e9b67e16438}\label{session_8c_ac68558989673f1c8ddaa6e9b67e16438}} 
+\index{session.c@{session.c}!connect\_to@{connect\_to}}
+\index{connect\_to@{connect\_to}!session.c@{session.c}}
+\doxysubsubsection{\texorpdfstring{connect\_to()}{connect\_to()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{session_8h_a5ef0f2ca252f36a0c8d046d2eb67b416}{socket\+\_\+t}} connect\+\_\+to (\begin{DoxyParamCaption}\item[{char $\ast$}]{ip\+\_\+address,  }\item[{short}]{port }\end{DoxyParamCaption})}
+
+
+
+Connect to another socket (client or server) 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ip\+\_\+address} & remote IP address \\
+\hline
+{\em port} & remote port \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the connected socket 
+\end{DoxyReturn}
+\mbox{\Hypertarget{session_8c_aca1cbe2dc8df88c5c93721cb37c48a5f}\label{session_8c_aca1cbe2dc8df88c5c93721cb37c48a5f}} 
+\index{session.c@{session.c}!create\_listen\_socket@{create\_listen\_socket}}
+\index{create\_listen\_socket@{create\_listen\_socket}!session.c@{session.c}}
+\doxysubsubsection{\texorpdfstring{create\_listen\_socket()}{create\_listen\_socket()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{session_8h_a5ef0f2ca252f36a0c8d046d2eb67b416}{socket\+\_\+t}} create\+\_\+listen\+\_\+socket (\begin{DoxyParamCaption}\item[{char $\ast$}]{ip\+\_\+address,  }\item[{short}]{port }\end{DoxyParamCaption})}
+
+
+
+Create a listening socket with the specified address. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ip\+\_\+address} & server IP address to listen to \\
+\hline
+{\em port} & server TCP port to listen to \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+socket created with the specified address and in a listening state 
+\end{DoxyReturn}
+\mbox{\Hypertarget{session_8c_a3e7c97f72ebb708631ae21453fb366d7}\label{session_8c_a3e7c97f72ebb708631ae21453fb366d7}} 
+\index{session.c@{session.c}!create\_socket@{create\_socket}}
+\index{create\_socket@{create\_socket}!session.c@{session.c}}
+\doxysubsubsection{\texorpdfstring{create\_socket()}{create\_socket()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{session_8h_a5ef0f2ca252f36a0c8d046d2eb67b416}{socket\+\_\+t}} create\+\_\+socket (\begin{DoxyParamCaption}\item[{int}]{mode }\end{DoxyParamCaption})}
+
+
+
+Create a socket. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em mode} & socket mode (SOCK\+\_\+\+STREAM or SOCK\+\_\+\+DGRAM) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the created socket 
+\end{DoxyReturn}

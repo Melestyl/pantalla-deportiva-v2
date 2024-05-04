@@ -1,0 +1,158 @@
+\hypertarget{data_8c}{}\doxysection{socket/data.c File Reference}
+\label{data_8c}\index{socket/data.c@{socket/data.c}}
+
+
+Data Representation Layer Implementation.  
+
+
+{\ttfamily \#include \char`\"{}data.\+h\char`\"{}}\newline
+Include dependency graph for data.\+c\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{data_8c__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+ssize\+\_\+t \mbox{\hyperlink{data_8c_a56d0ca5073f81bacdb332cc5078ad720}{send\+\_\+stream\+\_\+message}} (\mbox{\hyperlink{session_8h_a5ef0f2ca252f36a0c8d046d2eb67b416}{socket\+\_\+t}} $\ast$exchange\+\_\+socket, buffer\+\_\+t content)
+\begin{DoxyCompactList}\small\item\em send a message on a stream socket \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{data_8c_abeb8f2671189d3e228dac648bdd2a2b1}\label{data_8c_abeb8f2671189d3e228dac648bdd2a2b1}} 
+ssize\+\_\+t {\bfseries send\+\_\+dgram\+\_\+message} (\mbox{\hyperlink{session_8h_a5ef0f2ca252f36a0c8d046d2eb67b416}{socket\+\_\+t}} $\ast$exchange\+\_\+socket, buffer\+\_\+t content, char $\ast$ip, int port)
+\item 
+ssize\+\_\+t \mbox{\hyperlink{data_8c_ae83ef05d8f542cc295814dad007234f3}{send\+\_\+message}} (\mbox{\hyperlink{session_8h_a5ef0f2ca252f36a0c8d046d2eb67b416}{socket\+\_\+t}} $\ast$exchange\+\_\+socket, \mbox{\hyperlink{data_8h_a20a07aa5a0a4656891f77115d03fd436}{generic}} content, \mbox{\hyperlink{data_8h_a57650d9f60e214a3790f5c086ac1876c}{fct\+\_\+ptr}} serializer\+\_\+fct,...)
+\begin{DoxyCompactList}\small\item\em send a request/response on a socket (stream or datagram) \end{DoxyCompactList}\item 
+ssize\+\_\+t \mbox{\hyperlink{data_8c_acbcff9f04c63363a43adb71b97dba998}{receive\+\_\+stream\+\_\+message}} (\mbox{\hyperlink{session_8h_a5ef0f2ca252f36a0c8d046d2eb67b416}{socket\+\_\+t}} $\ast$exchange\+\_\+socket, buffer\+\_\+t content)
+\begin{DoxyCompactList}\small\item\em receive a message on a stream socket \end{DoxyCompactList}\item 
+ssize\+\_\+t \mbox{\hyperlink{data_8c_addec36525c927951d180422b28adee4c}{receive\+\_\+dgram\+\_\+message}} (\mbox{\hyperlink{session_8h_a5ef0f2ca252f36a0c8d046d2eb67b416}{socket\+\_\+t}} $\ast$exchange\+\_\+socket, buffer\+\_\+t content)
+\begin{DoxyCompactList}\small\item\em receive a message on a datagram socket \end{DoxyCompactList}\item 
+ssize\+\_\+t \mbox{\hyperlink{data_8c_aed96e3639668d1338c04ac6e774fb0e3}{receive\+\_\+message}} (\mbox{\hyperlink{session_8h_a5ef0f2ca252f36a0c8d046d2eb67b416}{socket\+\_\+t}} $\ast$exchange\+\_\+socket, \mbox{\hyperlink{data_8h_a20a07aa5a0a4656891f77115d03fd436}{generic}} content, \mbox{\hyperlink{data_8h_a57650d9f60e214a3790f5c086ac1876c}{fct\+\_\+ptr}} deserializer\+\_\+fct)
+\begin{DoxyCompactList}\small\item\em receive a request/response on a socket (stream or datagram) \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Data Representation Layer Implementation. 
+
+\begin{DoxyDate}{Date}
+2024-\/04-\/24 
+\end{DoxyDate}
+\begin{DoxyVersion}{Version}
+1.\+0 
+\end{DoxyVersion}
+\begin{DoxyAuthor}{Authors}
+
+\begin{DoxyItemize}
+\item TELLIER--CALOONE Tom
+\item DELANNOY Anaël 
+\end{DoxyItemize}
+\end{DoxyAuthor}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{data_8c_addec36525c927951d180422b28adee4c}\label{data_8c_addec36525c927951d180422b28adee4c}} 
+\index{data.c@{data.c}!receive\_dgram\_message@{receive\_dgram\_message}}
+\index{receive\_dgram\_message@{receive\_dgram\_message}!data.c@{data.c}}
+\doxysubsubsection{\texorpdfstring{receive\_dgram\_message()}{receive\_dgram\_message()}}
+{\footnotesize\ttfamily ssize\+\_\+t receive\+\_\+dgram\+\_\+message (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{session_8h_a5ef0f2ca252f36a0c8d046d2eb67b416}{socket\+\_\+t}} $\ast$}]{exchange\+\_\+socket,  }\item[{buffer\+\_\+t}]{content }\end{DoxyParamCaption})}
+
+
+
+receive a message on a datagram socket 
+
+
+\begin{DoxyParams}{Parameters}
+{\em exchange\+\_\+socket} & exchange socket to use for receiving \\
+\hline
+{\em content} & received content \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{data_8c_aed96e3639668d1338c04ac6e774fb0e3}\label{data_8c_aed96e3639668d1338c04ac6e774fb0e3}} 
+\index{data.c@{data.c}!receive\_message@{receive\_message}}
+\index{receive\_message@{receive\_message}!data.c@{data.c}}
+\doxysubsubsection{\texorpdfstring{receive\_message()}{receive\_message()}}
+{\footnotesize\ttfamily ssize\+\_\+t receive\+\_\+message (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{session_8h_a5ef0f2ca252f36a0c8d046d2eb67b416}{socket\+\_\+t}} $\ast$}]{exchange\+\_\+socket,  }\item[{\mbox{\hyperlink{data_8h_a20a07aa5a0a4656891f77115d03fd436}{generic}}}]{content,  }\item[{\mbox{\hyperlink{data_8h_a57650d9f60e214a3790f5c086ac1876c}{fct\+\_\+ptr}}}]{deserializer\+\_\+fct }\end{DoxyParamCaption})}
+
+
+
+receive a request/response on a socket (stream or datagram) 
+
+
+\begin{DoxyParams}{Parameters}
+{\em exchange\+\_\+socket} & exchange socket to use for receiving \\
+\hline
+{\em content} & request/response received after deserializing the reception buffer \\
+\hline
+{\em deserializer\+\_\+fct} & pointer to the request/response deserialization function \\
+\hline
+\end{DoxyParams}
+\begin{DoxyNote}{Note}
+if the deserializer\+\_\+fct parameter is NULL then content is a string 
+\end{DoxyNote}
+\begin{DoxyReturn}{Returns}
+content parameter modified with the received request/response 
+\end{DoxyReturn}
+\mbox{\Hypertarget{data_8c_acbcff9f04c63363a43adb71b97dba998}\label{data_8c_acbcff9f04c63363a43adb71b97dba998}} 
+\index{data.c@{data.c}!receive\_stream\_message@{receive\_stream\_message}}
+\index{receive\_stream\_message@{receive\_stream\_message}!data.c@{data.c}}
+\doxysubsubsection{\texorpdfstring{receive\_stream\_message()}{receive\_stream\_message()}}
+{\footnotesize\ttfamily ssize\+\_\+t receive\+\_\+stream\+\_\+message (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{session_8h_a5ef0f2ca252f36a0c8d046d2eb67b416}{socket\+\_\+t}} $\ast$}]{exchange\+\_\+socket,  }\item[{buffer\+\_\+t}]{content }\end{DoxyParamCaption})}
+
+
+
+receive a message on a stream socket 
+
+
+\begin{DoxyParams}{Parameters}
+{\em exchange\+\_\+socket} & exchange socket to use for receiving \\
+\hline
+{\em content} & received content \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{data_8c_ae83ef05d8f542cc295814dad007234f3}\label{data_8c_ae83ef05d8f542cc295814dad007234f3}} 
+\index{data.c@{data.c}!send\_message@{send\_message}}
+\index{send\_message@{send\_message}!data.c@{data.c}}
+\doxysubsubsection{\texorpdfstring{send\_message()}{send\_message()}}
+{\footnotesize\ttfamily ssize\+\_\+t send\+\_\+message (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{session_8h_a5ef0f2ca252f36a0c8d046d2eb67b416}{socket\+\_\+t}} $\ast$}]{exchange\+\_\+socket,  }\item[{\mbox{\hyperlink{data_8h_a20a07aa5a0a4656891f77115d03fd436}{generic}}}]{content,  }\item[{\mbox{\hyperlink{data_8h_a57650d9f60e214a3790f5c086ac1876c}{fct\+\_\+ptr}}}]{serializer\+\_\+fct,  }\item[{}]{... }\end{DoxyParamCaption})}
+
+
+
+send a request/response on a socket (stream or datagram) 
+
+
+\begin{DoxyParams}{Parameters}
+{\em exchange\+\_\+socket} & exchange socket to use for sending \\
+\hline
+{\em content} & request/response to serialize before sending \\
+\hline
+{\em serializer\+\_\+fct} & pointer to the request/response serialization function \\
+\hline
+{\em ...} & if the mode is DGRAM, the call requires the IP address and the port \\
+\hline
+\end{DoxyParams}
+\begin{DoxyNote}{Note}
+if the serializer\+\_\+fct parameter is NULL then content is a string 
+
+if the mode is DGRAM, the call requires the IP address and the port 
+\end{DoxyNote}
+\begin{DoxyReturn}{Returns}
+exchange\+\_\+socket parameter modified for the DGRAM mode 
+\end{DoxyReturn}
+\mbox{\Hypertarget{data_8c_a56d0ca5073f81bacdb332cc5078ad720}\label{data_8c_a56d0ca5073f81bacdb332cc5078ad720}} 
+\index{data.c@{data.c}!send\_stream\_message@{send\_stream\_message}}
+\index{send\_stream\_message@{send\_stream\_message}!data.c@{data.c}}
+\doxysubsubsection{\texorpdfstring{send\_stream\_message()}{send\_stream\_message()}}
+{\footnotesize\ttfamily ssize\+\_\+t send\+\_\+stream\+\_\+message (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{session_8h_a5ef0f2ca252f36a0c8d046d2eb67b416}{socket\+\_\+t}} $\ast$}]{exchange\+\_\+socket,  }\item[{buffer\+\_\+t}]{content }\end{DoxyParamCaption})}
+
+
+
+send a message on a stream socket 
+
+
+\begin{DoxyParams}{Parameters}
+{\em exchange\+\_\+socket} & exchange socket to use for sending \\
+\hline
+{\em content} & content to send \\
+\hline
+\end{DoxyParams}
