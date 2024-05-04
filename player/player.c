@@ -54,7 +54,8 @@ int main(int argc, char** argv) {
 	// Connecting to the court
 	court_socket = connect_to_court(socket);
 
-	//TODO: Entering match mode
+	// Entering match mode
+	match_mode(court_socket);
 
 	// Closing socket
 	close(socket.file_descriptor);
@@ -223,6 +224,7 @@ void invite_partner(socket_t socket) {
 			sprintf(data, "%d", choice); // Player's ID
 			prepare_message(&send_msg, PLAY_WITH, data);
 			send_message(&socket, &send_msg, serialize_message);
+			printf("Invitation envoyée, en attente de validation\n");
 
 			// Waiting for the response of the player
 			receive_message(&socket, &received_msg, deserialize_message);
@@ -261,4 +263,37 @@ socket_t connect_to_court(socket_t socket) {
 
 	// Creating a new socket to connect to the court
 	return connect_to(court_ip, court_port);
+}
+
+/**
+ * @fn void match_mode(socket_t court_socket)
+ * @brief Enters the match mode
+ * @param court_socket: Court socket
+ */
+void match_mode(socket_t court_socket) {
+	message_t send_msg, received_msg;
+
+	printf("Appuyez sur Entrée pour ajouter un point au score !\n");
+
+	while (1) {
+		// Waiting for the player to press Enter
+		getchar();
+
+		// Sending the point
+		prepare_message(&send_msg, INCREMENT_SCORE, "");
+		send_message(&court_socket, &send_msg, serialize_message);
+
+		// Waiting for an OK
+		receive_message(&court_socket, &received_msg, deserialize_message);
+		if (received_msg.code == (char) OK)
+			printf("Point ajouté !\n");
+		else if (received_msg.code == (char) END_MATCH) {
+			printf("Fin du match !\n");
+			break;
+		}
+		else {
+			fprintf(stderr, "Erreur lors de l'ajout du point\n");
+			break;
+		}
+	}
 }

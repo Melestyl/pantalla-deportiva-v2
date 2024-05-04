@@ -64,4 +64,11 @@ void invite_partner(socket_t socket);
  */
 socket_t connect_to_court(socket_t socket);
 
+/**
+ * @fn void match_mode(socket_t court_socket)
+ * @brief Enters the match mode
+ * @param court_socket: Court socket
+ */
+void match_mode(socket_t court_socket);
+
 #endif //PANTALLA_DEPORTIVA_V2_PLAYER_H
