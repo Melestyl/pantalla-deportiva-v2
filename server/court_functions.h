@@ -20,7 +20,7 @@ struct court {
 	int listen_port;
 	player_t players[2];
 	char available;
-	//TODO: Score structure
+	buffer_t score;
 };
 
 /**
@@ -55,6 +55,13 @@ typedef struct court_node court_node_t;
 void new_court(void* socket, char* ip);
 
 /**
+ * @fn void listen_for_score(court_t* court)
+ * @brief Listens for score and END_MATCH messages
+ * @param court: court structure with all data
+ */
+void listen_for_score(court_t* court);
+
+/**
  * @fn void reserve_court(player_t p1, player_t p2)
  * @brief Reserves a court for two players
  * @param p1: player 1
@@ -78,12 +85,12 @@ void list_courts(socket_t socket);
 court_t* subscribe_to_court(socket_t socket, int court_id);
 
 /**
- * @fn void listen_and_update(socket_t socket, court_t court)
+ * @fn void watch(socket_t socket, court_t court)
  * @brief Listens for score and sends update to the spectator
  * @param spectator_socket: spectator's socket
  * @param court: court to watch for score
  */
-void listen_and_update(socket_t* spectator_socket, court_t* court);
+void watch(socket_t spectator_socket, court_t* court);
 
 /**
  * @fn spectator_function(socket_t socket)

@@ -12,7 +12,9 @@ int main(int argc, char** argv) {
 	socket = connect_to(argv[1], atoi(argv[2]));
 
 	// Authenticating
+	printf("Authentification en cours...\n");
 	authenticate(socket);
+	printf("Authentification effectuée !\n");
 
 	// Selecting a court
 	select_and_subscribe(socket);
@@ -59,7 +61,7 @@ void authenticate(socket_t socket) {
 void select_and_subscribe(socket_t socket) {
 	message_t send_msg, received_msg;
 	buffer_t data;
-	int choice;
+	int choice, subscribed = 0;
 
 	do {
 		printf("A quel terrain voulez-vous vous abonner ? (numéro de terrain)\n"
@@ -70,8 +72,9 @@ void select_and_subscribe(socket_t socket) {
 		switch (choice) {
 			case 0:
 				// Sending the request
-				prepare_message(&send_msg, ASK_COURTS, NULL);
+				prepare_message(&send_msg, ASK_COURTS, "");
 				send_message(&socket, &send_msg, serialize_message);
+				sleep(1);
 
 				// Receiving the response
 				receive_message(&socket, &received_msg, deserialize_message);
@@ -85,18 +88,21 @@ void select_and_subscribe(socket_t socket) {
 				sprintf(data, "%d", choice);
 				prepare_message(&send_msg, SUBSCRIBE, data);
 				send_message(&socket, &send_msg, serialize_message);
+				sleep(1);
 
 				// Receiving the response
 				printf("Attente de la validation serveur\n");
 				receive_message(&socket, &received_msg, deserialize_message);
 
-				if (received_msg.code == (char) OK)
+				if (received_msg.code == (char) OK) {
+					subscribed = 1;
 					printf("Abonnement au terrain %d réussi\n", choice);
+				}
 				else
 					printf("Abonnement au terrain %d échoué\n", choice);
 				break;
 		}
-	} while (choice != 0 && received_msg.code != (char) OK);
+	} while (!subscribed);
 }
 
 /**
@@ -107,10 +113,15 @@ void select_and_subscribe(socket_t socket) {
 void listen_for_score(socket_t socket) {
 	message_t received_msg;
 
+	printf("Attente des scores...\n");
+	sleep(1);
+
 	do {
 		receive_message(&socket, &received_msg, deserialize_message);
 
 		if (received_msg.code == (char) SCORE)
 			printf("Score : %s\n", received_msg.data);
+
+		sleep(1);
 	} while (received_msg.code != (char) END_MATCH);
 }
