@@ -91,6 +91,7 @@ void listen_thread(void* socket) {
 		// Spectator
 		case '4':
 			printf("[%s:%d] is a spectator.\n", ip, port);
+			spectator_function(client_socket);
 			break;
 
 		// Unknown

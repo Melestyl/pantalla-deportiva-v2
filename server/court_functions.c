@@ -153,3 +153,94 @@ void reserve_court(player_t p1, player_t p2) {
 	send_message(p1.socket, &send_msg, serialize_message);
 	send_message(p2.socket, &send_msg, serialize_message);
 }
+
+/**
+ * @fn list_courts(socket_t socket)
+ * @brief Send a list of courts to a spectator
+ * @param socket: spectator's socket
+ */
+void list_courts(socket_t socket) {
+	court_node_t* current = courts;
+	message_t send_msg;
+	buffer_t data, tmp;
+
+	// Preparing the list of courts
+	strcpy(data, "");
+	while (current != NULL) {
+		sprintf(tmp, "%d\n", current->court.id);
+		strcat(data, tmp);
+		current = current->next;
+	}
+
+	// Sending the list of courts
+	prepare_message(&send_msg, (char) LIST_COURTS, data);
+	send_message(&socket, &send_msg, serialize_message);
+}
+
+/**
+ * @fn subscribe_to_court(socket_t socket, int court_id)
+ * @param socket: spectator's socket
+ * @param court_id: court's id
+ * @return court_t*: court structure to read score afterwards, NULL if the court does not exist
+ */
+court_t* subscribe_to_court(socket_t socket, int court_id) {
+	court_node_t* current = courts;
+	message_t send_msg;
+
+	// Searching for the court
+	while (current != NULL) {
+		if (current->court.id == court_id) {
+			// Sending the subscription message
+			prepare_message(&send_msg, (char) OK, "");
+			send_message(&socket, &send_msg, serialize_message);
+
+			return &current->court;
+		}
+		current = current->next;
+	}
+
+	// Sending NOK if the court does not exist
+	prepare_message(&send_msg, (char) NOK, "");
+	send_message(&socket, &send_msg, serialize_message);
+	return NULL;
+
+}
+
+/**
+ * @fn void listen_and_update(socket_t socket, court_t court)
+ * @brief Listens for score and sends update to the spectator
+ * @param spectator_socket: spectator's socket
+ * @param court: court to watch for score
+ */
+void listen_and_update(socket_t* spectator_socket, court_t* court) {
+	message_t send_msg;
+	buffer_t data;
+	court_t court_copy; // For detecting changes in the score
+
+	//TODO: Score in the structure of court_t
+	//TODO: Update the score in the structure of court_t (in the thread of the court)
+	//TODO: Watch for news and update to the spectator
+}
+
+/**
+ * @fn spectator_function(socket_t socket)
+ * @brief Function to manage a spectator
+ * @param socket: spectator's socket
+ */
+void spectator_function(socket_t* socket) {
+	message_t received_msg;
+	court_t* court;
+
+	receive_message(socket, &received_msg, deserialize_message);
+
+	switch (received_msg.code) {
+		case ASK_COURTS:
+			list_courts(*socket);
+			break;
+		case SUBSCRIBE:
+			court = subscribe_to_court(*socket, atoi(received_msg.data));
+			if (court != NULL)
+				listen_and_update(*court);
+			break;
+	}
+}

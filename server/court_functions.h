@@ -62,4 +62,34 @@ void new_court(void* socket, char* ip);
  */
 void reserve_court(player_t p1, player_t p2);
 
+/**
+ * @fn list_courts(socket_t socket)
+ * @brief Send a list of courts to a spectator
+ * @param socket: spectator's socket
+ */
+void list_courts(socket_t socket);
+
+/**
+ * @fn subscribe_to_court(socket_t socket, int court_id)
+ * @param socket: spectator's socket
+ * @param court_id: court's id
+ * @return court_t*: court structure to read score afterwards, NULL if the court does not exist
+ */
+court_t* subscribe_to_court(socket_t socket, int court_id);
+
+/**
+ * @fn void listen_and_update(socket_t socket, court_t court)
+ * @brief Listens for score and sends update to the spectator
+ * @param spectator_socket: spectator's socket
+ * @param court: court to watch for score
+ */
+void listen_and_update(socket_t* spectator_socket, court_t* court);
+
+/**
+ * @fn spectator_function(socket_t socket)
+ * @brief Function to manage a spectator
+ * @param socket: spectator's socket
+ */
+void spectator_function(socket_t* socket);
+
 #endif //PANTALLA_DEPORTIVA_V2_COURT_FUNCTIONS_H
