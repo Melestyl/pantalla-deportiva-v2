@@ -1,7 +1,7 @@
 #include "player.h"
 
 int main(int argc, char** argv) {
-	socket_t socket;
+	socket_t socket, court_socket;
 	buffer_t first_name, last_name;
 	char choice;
 
@@ -51,8 +51,10 @@ int main(int argc, char** argv) {
 			exit(1);
 	}
 
-	//TODO: Receiving the court
-	//TODO: Match mode
+	// Connecting to the court
+	court_socket = connect_to_court(socket);
+
+	//TODO: Entering match mode
 
 	// Closing socket
 	close(socket.file_descriptor);
@@ -230,4 +232,33 @@ void invite_partner(socket_t socket) {
 				printf("Le partenaire a refusé ou n'existe pas.\nVeuillez choisir un autre partenaire\n");
 		}
 	} while (choice == 0 || received_msg.code != (char) OK);
+}
+
+/**
+ * @fn socket_t connect_to_court()
+ * @brief Connects to a court given by the server
+ * @param socket: Server socket
+ * @return Court socket
+ */
+socket_t connect_to_court(socket_t socket) {
+	message_t received_msg;
+	buffer_t court_ip;
+	int court_port;
+	char* save_ptr;
+
+	// Receiving the court
+	receive_message(&socket, &received_msg, deserialize_message);
+	if (received_msg.code == COURT_FOUND)
+		printf("Court trouvé !\n");
+	else {
+		fprintf(stderr, "Erreur lors de la réception du court\n");
+		exit(1);
+	}
+
+	// Retrieving the court's IP and port
+	strcpy(court_ip, strtok_r(received_msg.data, ":", &save_ptr));
+	court_port = atoi(strtok_r(NULL, ":", &save_ptr));
+
+	// Creating a new socket to connect to the court
+	return connect_to(court_ip, court_port);
 }

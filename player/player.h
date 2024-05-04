@@ -56,4 +56,12 @@ void print_list_of_players(char* data);
  */
 void invite_partner(socket_t socket);
 
+/**
+ * @fn socket_t connect_to_court()
+ * @brief Connects to a court given by the server
+ * @param socket: Server socket
+ * @return Court socket
+ */
+socket_t connect_to_court(socket_t socket);
+
 #endif //PANTALLA_DEPORTIVA_V2_PLAYER_H
