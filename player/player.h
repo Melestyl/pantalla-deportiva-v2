@@ -62,7 +62,7 @@ void invite_partner(socket_t socket);
  * @param socket: Server socket
  * @return Court socket
  */
-socket_t connect_to_court(socket_t socket);
+socket_t connect_to_court(socket_t* socket);
 
 /**
  * @fn void match_mode(socket_t court_socket)

@@ -53,7 +53,7 @@ int main(int argc, char** argv) {
 
 	// Connecting to the court
 	printf("Attente de la réception du court...\n");
-	court_socket = connect_to_court(socket);
+	court_socket = connect_to_court(&socket);
 
 	// Entering match mode
 	match_mode(&court_socket);
@@ -249,14 +249,15 @@ void invite_partner(socket_t socket) {
  * @param socket: Server socket
  * @return Court socket
  */
-socket_t connect_to_court(socket_t socket) {
+socket_t connect_to_court(socket_t* socket) {
 	message_t received_msg;
 	buffer_t court_ip;
 	int court_port;
 	char* save_ptr;
 
 	// Receiving the court
-	receive_message(&socket, &received_msg, deserialize_message);
+	sleep(1);
+	receive_message(socket, &received_msg, deserialize_message);
 	if (received_msg.code == COURT_FOUND)
 		printf("Court trouvé !\n");
 	else {

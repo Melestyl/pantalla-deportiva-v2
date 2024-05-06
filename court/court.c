@@ -207,9 +207,14 @@ void increment_score(int player) {
 		(*player_sets)++;
 	}
 
-	pthread_mutex_unlock(&score_mutex);
-
 	printf("Score incremented by player %d\n", player);
+	printf("New score : %d/%d:%d/%d:%d/%d:%d/%d\n",
+			score.player1, score.player2,
+			score.player1_games[0], score.player2_games[0],
+			score.player1_games[1], score.player2_games[1],
+			score.player1_games[2], score.player2_games[2]);
+
+	pthread_mutex_unlock(&score_mutex);
 }
 
 /**
