@@ -52,10 +52,11 @@ int main(int argc, char** argv) {
 	}
 
 	// Connecting to the court
+	printf("Attente de la réception du court...\n");
 	court_socket = connect_to_court(socket);
 
 	// Entering match mode
-	match_mode(court_socket);
+	match_mode(&court_socket);
 
 	// Closing socket
 	close(socket.file_descriptor);
@@ -193,7 +194,7 @@ void print_list_of_players(char* data) {
 void invite_partner(socket_t socket) {
 	message_t send_msg, received_msg;
 	buffer_t data;
-	int choice;
+	int choice, partner_found = 0;
 
 	do {
 		// Asking for who to invite
@@ -212,10 +213,14 @@ void invite_partner(socket_t socket) {
 
 			// Receiving the list of players
 			receive_message(&socket, &received_msg, deserialize_message);
-			if (received_msg.code == LIST_PLAYERS)
-				print_list_of_players(received_msg.data);
-			else
+			if (received_msg.code == LIST_PLAYERS) {
+				//print_list_of_players(received_msg.data);
+				printf("Liste des joueurs : %s\n", received_msg.data);
+			}
+			else {
 				fprintf(stderr, "Erreur lors de la réception de la liste des joueurs\n");
+				fprintf(stderr, "reçu : %d\n", received_msg.code);
+			}
 		}
 
 		// Inviting the player
@@ -228,12 +233,14 @@ void invite_partner(socket_t socket) {
 
 			// Waiting for the response of the player
 			receive_message(&socket, &received_msg, deserialize_message);
-			if (received_msg.code == (char) OK)
+			if (received_msg.code == (char) OK) {
 				printf("Invitation acceptée par le joueur !\n");
+				partner_found = 1;
+			}
 			else
 				printf("Le partenaire a refusé ou n'existe pas.\nVeuillez choisir un autre partenaire\n");
 		}
-	} while (choice == 0 || received_msg.code != (char) OK);
+	} while (!partner_found);
 }
 
 /**
@@ -254,6 +261,7 @@ socket_t connect_to_court(socket_t socket) {
 		printf("Court trouvé !\n");
 	else {
 		fprintf(stderr, "Erreur lors de la réception du court\n");
+		fprintf(stderr, "reçu : %d\n", received_msg.code);
 		exit(1);
 	}
 
@@ -270,7 +278,7 @@ socket_t connect_to_court(socket_t socket) {
  * @brief Enters the match mode
  * @param court_socket: Court socket
  */
-void match_mode(socket_t court_socket) {
+void match_mode(socket_t* court_socket) {
 	message_t send_msg, received_msg;
 
 	printf("Appuyez sur Entrée pour ajouter un point au score !\n");
@@ -278,13 +286,17 @@ void match_mode(socket_t court_socket) {
 	while (1) {
 		// Waiting for the player to press Enter
 		getchar();
+		printf("Ajout d'un point...\n");
 
 		// Sending the point
+		printf("Envoi du message au terrain\n");
 		prepare_message(&send_msg, INCREMENT_SCORE, "");
-		send_message(&court_socket, &send_msg, serialize_message);
+		send_message(court_socket, &send_msg, serialize_message);
+		sleep(1);
 
 		// Waiting for an OK
-		receive_message(&court_socket, &received_msg, deserialize_message);
+		printf("Attente de la réponse du terrain\n");
+		receive_message(court_socket, &received_msg, deserialize_message);
 		if (received_msg.code == (char) OK)
 			printf("Point ajouté !\n");
 		else if (received_msg.code == (char) END_MATCH) {
@@ -295,5 +307,6 @@ void match_mode(socket_t court_socket) {
 			fprintf(stderr, "Erreur lors de l'ajout du point\n");
 			break;
 		}
+		sleep(1);
 	}
 }

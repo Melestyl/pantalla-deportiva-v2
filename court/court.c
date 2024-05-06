@@ -254,10 +254,11 @@ void send_score_to_server() {
  */
 void player_thread(void* player_data) {
 	player_data_t* player = ((player_data_t*) player_data);
-	message_t received_msg;
+	message_t received_msg, send_msg;
 
 	// Waiting for any score-increment update
 	while (!is_match_finished()) {
+		printf("Waiting for a message from player %d...\n", player->player_number);
 		receive_message(player->socket, &received_msg, deserialize_message);
 
 		if (received_msg.code == (char) INCREMENT_SCORE) {
@@ -267,9 +268,17 @@ void player_thread(void* player_data) {
 
 				// Sending the updated score to the server
 				send_score_to_server();
+
+				// Answering OK to the player
+				prepare_message(&send_msg, (char) OK, "");
+				send_message(player->socket, &send_msg, serialize_message);
 			}
 		}
+		else
+			fprintf(stderr, "Received unknown message from player %d: %d\n", player->player_number, received_msg.code);
 	}
+
+	printf("Match ended!\n");
 }
 
 /**
