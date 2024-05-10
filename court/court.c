@@ -60,19 +60,12 @@ int main(int argc, char** argv) {
 		pthread_create(&p1_thread, NULL, (void *) player_thread, (void *) &player1_data);
 		pthread_create(&p2_thread, NULL, (void *) player_thread, (void *) &player2_data);
 
-		// Waiting for the game to finish, ending threads
+		// Waiting for the game to finish
 		while (!is_match_finished())
 			sleep(1);
-		pthread_cancel(p1_thread);
-		pthread_cancel(p2_thread);
 
 		// Send an END_MATCH message to the server
 		send_end_match(server_socket);
-
-		// Sending and END_MATCH message to the players
-		prepare_message(&send_msg, END_MATCH, "");
-		send_message(&player1, &send_msg, serialize_message);
-		send_message(&player2, &send_msg, serialize_message);
 	}
 }
 
@@ -180,7 +173,7 @@ void increment_score(int player) {
 		case LOVE:
 		case FIFTEEN:
 		case THIRTY:
-			*(player_score)++;
+			(*player_score)++;
 			break;
 		case FORTY:
 			if (*opponent_score == FORTY)
@@ -224,12 +217,48 @@ void increment_score(int player) {
 void send_score_to_server() {
 	message_t send_msg;
 	buffer_t data;
+	char formatted_p1_score[5], formatted_p2_score[5];
 
 	pthread_mutex_lock(&score_mutex);
 
+	switch (score.player1) {
+		case LOVE:
+			strcpy(formatted_p1_score, "0");
+			break;
+		case FIFTEEN:
+			strcpy(formatted_p1_score, "15");
+			break;
+		case THIRTY:
+			strcpy(formatted_p1_score, "30");
+			break;
+		case FORTY:
+			strcpy(formatted_p1_score, "40");
+			break;
+		case ADVANTAGE:
+			strcpy(formatted_p1_score, "ADV");
+			break;
+	}
+	switch (score.player2) {
+		case LOVE:
+			strcpy(formatted_p2_score, "0");
+			break;
+		case FIFTEEN:
+			strcpy(formatted_p2_score, "15");
+			break;
+		case THIRTY:
+			strcpy(formatted_p2_score, "30");
+			break;
+		case FORTY:
+			strcpy(formatted_p2_score, "40");
+			break;
+		case ADVANTAGE:
+			strcpy(formatted_p2_score, "ADV");
+			break;
+	}
+
 	// Formatting data
-	sprintf(data, "%d/%d:%d/%d:%d/%d:%d/%d",
-			score.player1, score.player2,
+	sprintf(data, "%s/%s:%d/%d:%d/%d:%d/%d",
+			formatted_p1_score, formatted_p2_score,
 			score.player1_games[0], score.player2_games[0],
 			score.player1_games[1], score.player2_games[1],
 			score.player1_games[2], score.player2_games[2]
@@ -262,7 +291,7 @@ void player_thread(void* player_data) {
 	message_t received_msg, send_msg;
 
 	// Waiting for any score-increment update
-	while (!is_match_finished()) {
+	while (1) {
 		printf("Waiting for a message from player %d...\n", player->player_number);
 		receive_message(player->socket, &received_msg, deserialize_message);
 
@@ -277,6 +306,12 @@ void player_thread(void* player_data) {
 				// Answering OK to the player
 				prepare_message(&send_msg, (char) OK, "");
 				send_message(player->socket, &send_msg, serialize_message);
+			}
+			else {
+				// Answering the player the match is finished
+				prepare_message(&send_msg, (char) END_MATCH, "");
+				send_message(player->socket, &send_msg, serialize_message);
+				break;
 			}
 		}
 		else

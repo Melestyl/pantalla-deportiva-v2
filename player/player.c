@@ -284,6 +284,7 @@ void match_mode(socket_t* court_socket) {
 
 	printf("Appuyez sur Entrée pour ajouter un point au score !\n");
 
+	getchar(); // Removing the newline character from the buffer
 	while (1) {
 		// Waiting for the player to press Enter
 		getchar();

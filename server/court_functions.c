@@ -134,16 +134,22 @@ void listen_for_score(court_t* court) {
 
 	do {
 		receive_message(court->socket, &received_msg, deserialize_message);
+
 		if (received_msg.code == (char) SCORE) {
 			// Copying the score
 			strcpy(court->score, received_msg.data);
 			printf("Court %d: %s\n", court->id, court->score);
-
-			// Sending OK to the court
-			prepare_message(&send_msg, (char) OK, "");
-			send_message(court->socket, &send_msg, serialize_message);
-			sleep(1);
 		}
+		else if (received_msg.code == (char) END_MATCH) {
+			// Removing the court from the list
+			court->available = 1;
+			printf("Court %d is now available\n", court->id);
+		}
+
+		// Sending OK to the court
+		prepare_message(&send_msg, (char) OK, "");
+		send_message(court->socket, &send_msg, serialize_message);
+		sleep(1);
 	} while (received_msg.code != (char) END_MATCH);
 }
 
