@@ -1,0 +1,173 @@
+\hypertarget{court_8c}{}\doxysection{court/court.c File Reference}
+\label{court_8c}\index{court/court.c@{court/court.c}}
+
+
+Court module.  
+
+
+{\ttfamily \#include \char`\"{}court.\+h\char`\"{}}\newline
+Include dependency graph for court.\+c\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{court_8c__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{court_8c_a3c04138a5bfe5d72780bb7e82a18e627}\label{court_8c_a3c04138a5bfe5d72780bb7e82a18e627}} 
+int {\bfseries main} (int argc, char $\ast$$\ast$argv)
+\item 
+void \mbox{\hyperlink{court_8c_a6de2d124f77b4034057fc2ed16f1322e}{authenticate}} (\mbox{\hyperlink{session_8h_a5ef0f2ca252f36a0c8d046d2eb67b416}{socket\+\_\+t}} \mbox{\hyperlink{structsocket}{socket}})
+\begin{DoxyCompactList}\small\item\em Authenticates the spectator. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{court_8c_af6dc34bd532998de8a509c90fc037c3f}{send\+\_\+listen\+\_\+port}} (\mbox{\hyperlink{session_8h_a5ef0f2ca252f36a0c8d046d2eb67b416}{socket\+\_\+t}} \mbox{\hyperlink{structsocket}{socket}}, int port)
+\begin{DoxyCompactList}\small\item\em Sends the listen port to the server. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{court_8c_a4535a7107493c3b506ce9f2f683d2b05}\label{court_8c_a4535a7107493c3b506ce9f2f683d2b05}} 
+void {\bfseries init\+\_\+score} ()
+\item 
+int \mbox{\hyperlink{court_8c_ac0be70035fd6d33bf319ea14c094512c}{is\+\_\+match\+\_\+finished}} ()
+\begin{DoxyCompactList}\small\item\em Checks if the match is finished by looking at the sets won by each player. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{court_8c_aca75b00684e02fb7453a97a5dc143fba}{increment\+\_\+score}} (int \mbox{\hyperlink{structplayer}{player}})
+\begin{DoxyCompactList}\small\item\em Increments the score of a player. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{court_8c_a3c6c2fb7c3a0cab759c1180b741978a5}\label{court_8c_a3c6c2fb7c3a0cab759c1180b741978a5}} 
+void \mbox{\hyperlink{court_8c_a3c6c2fb7c3a0cab759c1180b741978a5}{send\+\_\+score\+\_\+to\+\_\+server}} ()
+\begin{DoxyCompactList}\small\item\em Sends an update message to the server with the current score. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{court_8c_a3154a95a417a01a20d631de0c2394a79}{player\+\_\+thread}} (void $\ast$\mbox{\hyperlink{structplayer__data}{player\+\_\+data}})
+\begin{DoxyCompactList}\small\item\em Thread for the player. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{court_8c_a6f80b655ed8ac9a942c2f335b05e0553}{send\+\_\+end\+\_\+match}} (\mbox{\hyperlink{session_8h_a5ef0f2ca252f36a0c8d046d2eb67b416}{socket\+\_\+t}} \mbox{\hyperlink{structsocket}{socket}})
+\begin{DoxyCompactList}\small\item\em Sends an END\+\_\+\+MATCH message to the server. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{court_8c_ab10c0c50c02a59ae9bd74c78c49b559d}{sigint\+\_\+handler}} (int signum)
+\begin{DoxyCompactList}\small\item\em Signal handler for SIGINT, closing the socket properly. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{court_8c_aeecd3baa15eb20e5acff5c1bcb7b4bc2}\label{court_8c_aeecd3baa15eb20e5acff5c1bcb7b4bc2}} 
+\mbox{\hyperlink{session_8h_a5ef0f2ca252f36a0c8d046d2eb67b416}{socket\+\_\+t}} {\bfseries listen\+\_\+socket}
+\item 
+\mbox{\Hypertarget{court_8c_a0124f18fbca48cbe72440dbd735bca01}\label{court_8c_a0124f18fbca48cbe72440dbd735bca01}} 
+\mbox{\hyperlink{session_8h_a5ef0f2ca252f36a0c8d046d2eb67b416}{socket\+\_\+t}} {\bfseries server\+\_\+socket}
+\item 
+\mbox{\Hypertarget{court_8c_ae18646ca2ceabab20a2963a62b1fcfc5}\label{court_8c_ae18646ca2ceabab20a2963a62b1fcfc5}} 
+\mbox{\hyperlink{structscore}{score\+\_\+t}} {\bfseries score}
+\item 
+\mbox{\Hypertarget{court_8c_acf07a1979e925335a73b57d6fce27e9c}\label{court_8c_acf07a1979e925335a73b57d6fce27e9c}} 
+pthread\+\_\+mutex\+\_\+t {\bfseries score\+\_\+mutex} = PTHREAD\+\_\+\+MUTEX\+\_\+\+INITIALIZER
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Court module. 
+
+\begin{DoxyDate}{Date}
+2024-\/05-\/01 
+\end{DoxyDate}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{court_8c_a6de2d124f77b4034057fc2ed16f1322e}\label{court_8c_a6de2d124f77b4034057fc2ed16f1322e}} 
+\index{court.c@{court.c}!authenticate@{authenticate}}
+\index{authenticate@{authenticate}!court.c@{court.c}}
+\doxysubsubsection{\texorpdfstring{authenticate()}{authenticate()}}
+{\footnotesize\ttfamily void authenticate (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{session_8h_a5ef0f2ca252f36a0c8d046d2eb67b416}{socket\+\_\+t}}}]{socket }\end{DoxyParamCaption})}
+
+
+
+Authenticates the spectator. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em socket} & Server socket \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{court_8c_aca75b00684e02fb7453a97a5dc143fba}\label{court_8c_aca75b00684e02fb7453a97a5dc143fba}} 
+\index{court.c@{court.c}!increment\_score@{increment\_score}}
+\index{increment\_score@{increment\_score}!court.c@{court.c}}
+\doxysubsubsection{\texorpdfstring{increment\_score()}{increment\_score()}}
+{\footnotesize\ttfamily void increment\+\_\+score (\begin{DoxyParamCaption}\item[{int}]{player }\end{DoxyParamCaption})}
+
+
+
+Increments the score of a player. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em player} & Player to increment the score (1 or 2) \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{court_8c_ac0be70035fd6d33bf319ea14c094512c}\label{court_8c_ac0be70035fd6d33bf319ea14c094512c}} 
+\index{court.c@{court.c}!is\_match\_finished@{is\_match\_finished}}
+\index{is\_match\_finished@{is\_match\_finished}!court.c@{court.c}}
+\doxysubsubsection{\texorpdfstring{is\_match\_finished()}{is\_match\_finished()}}
+{\footnotesize\ttfamily int is\+\_\+match\+\_\+finished (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Checks if the match is finished by looking at the sets won by each player. 
+
+\begin{DoxyReturn}{Returns}
+1 if the match is finished, 0 otherwise 
+\end{DoxyReturn}
+\mbox{\Hypertarget{court_8c_a3154a95a417a01a20d631de0c2394a79}\label{court_8c_a3154a95a417a01a20d631de0c2394a79}} 
+\index{court.c@{court.c}!player\_thread@{player\_thread}}
+\index{player\_thread@{player\_thread}!court.c@{court.c}}
+\doxysubsubsection{\texorpdfstring{player\_thread()}{player\_thread()}}
+{\footnotesize\ttfamily void player\+\_\+thread (\begin{DoxyParamCaption}\item[{void $\ast$}]{player\+\_\+data }\end{DoxyParamCaption})}
+
+
+
+Thread for the player. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em \mbox{\hyperlink{structplayer__data}{player\+\_\+data}}} & Structure containing the player\textquotesingle{}s socket and number \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{court_8c_a6f80b655ed8ac9a942c2f335b05e0553}\label{court_8c_a6f80b655ed8ac9a942c2f335b05e0553}} 
+\index{court.c@{court.c}!send\_end\_match@{send\_end\_match}}
+\index{send\_end\_match@{send\_end\_match}!court.c@{court.c}}
+\doxysubsubsection{\texorpdfstring{send\_end\_match()}{send\_end\_match()}}
+{\footnotesize\ttfamily void send\+\_\+end\+\_\+match (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{session_8h_a5ef0f2ca252f36a0c8d046d2eb67b416}{socket\+\_\+t}}}]{socket }\end{DoxyParamCaption})}
+
+
+
+Sends an END\+\_\+\+MATCH message to the server. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em socket} & Server socket \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{court_8c_af6dc34bd532998de8a509c90fc037c3f}\label{court_8c_af6dc34bd532998de8a509c90fc037c3f}} 
+\index{court.c@{court.c}!send\_listen\_port@{send\_listen\_port}}
+\index{send\_listen\_port@{send\_listen\_port}!court.c@{court.c}}
+\doxysubsubsection{\texorpdfstring{send\_listen\_port()}{send\_listen\_port()}}
+{\footnotesize\ttfamily void send\+\_\+listen\+\_\+port (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{session_8h_a5ef0f2ca252f36a0c8d046d2eb67b416}{socket\+\_\+t}}}]{socket,  }\item[{int}]{port }\end{DoxyParamCaption})}
+
+
+
+Sends the listen port to the server. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em socket} & Server socket \\
+\hline
+{\em port} & Listen port \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{court_8c_ab10c0c50c02a59ae9bd74c78c49b559d}\label{court_8c_ab10c0c50c02a59ae9bd74c78c49b559d}} 
+\index{court.c@{court.c}!sigint\_handler@{sigint\_handler}}
+\index{sigint\_handler@{sigint\_handler}!court.c@{court.c}}
+\doxysubsubsection{\texorpdfstring{sigint\_handler()}{sigint\_handler()}}
+{\footnotesize\ttfamily void sigint\+\_\+handler (\begin{DoxyParamCaption}\item[{int}]{signum }\end{DoxyParamCaption})}
+
+
+
+Signal handler for SIGINT, closing the socket properly. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em signum} & unused \\
+\hline
+\end{DoxyParams}

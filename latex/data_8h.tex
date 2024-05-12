@@ -1,0 +1,124 @@
+\hypertarget{data_8h}{}\doxysection{socket/data.h File Reference}
+\label{data_8h}\index{socket/data.h@{socket/data.h}}
+
+
+Data Representation Layer Specification.  
+
+
+{\ttfamily \#include \char`\"{}session.\+h\char`\"{}}\newline
+Include dependency graph for data.\+h\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{data_8h__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{data_8h__dep__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{data_8h_a1d5dab30b404fab91608086105afc78c}\label{data_8h_a1d5dab30b404fab91608086105afc78c}} 
+\#define \mbox{\hyperlink{data_8h_a1d5dab30b404fab91608086105afc78c}{MAX\+\_\+\+BUFFER}}~1024
+\begin{DoxyCompactList}\small\item\em size of a buffer\+\_\+t for sending/receiving \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{data_8h_a97e5c313d1d8986ebeb91c25e9959195}\label{data_8h_a97e5c313d1d8986ebeb91c25e9959195}} 
+typedef char {\bfseries buffer\+\_\+t}\mbox{[}\mbox{\hyperlink{data_8h_a1d5dab30b404fab91608086105afc78c}{MAX\+\_\+\+BUFFER}}\mbox{]}
+\item 
+\mbox{\Hypertarget{data_8h_a20a07aa5a0a4656891f77115d03fd436}\label{data_8h_a20a07aa5a0a4656891f77115d03fd436}} 
+typedef void $\ast$ \mbox{\hyperlink{data_8h_a20a07aa5a0a4656891f77115d03fd436}{generic}}
+\begin{DoxyCompactList}\small\item\em generic data type\+: requests/responses \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{data_8h_a57650d9f60e214a3790f5c086ac1876c}\label{data_8h_a57650d9f60e214a3790f5c086ac1876c}} 
+typedef void($\ast$ \mbox{\hyperlink{data_8h_a57650d9f60e214a3790f5c086ac1876c}{fct\+\_\+ptr}}) (\mbox{\hyperlink{data_8h_a20a07aa5a0a4656891f77115d03fd436}{generic}}, \mbox{\hyperlink{data_8h_a20a07aa5a0a4656891f77115d03fd436}{generic}})
+\begin{DoxyCompactList}\small\item\em pointer to a generic function with 2 generic parameters \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+ssize\+\_\+t \mbox{\hyperlink{data_8h_ae83ef05d8f542cc295814dad007234f3}{send\+\_\+message}} (\mbox{\hyperlink{session_8h_a5ef0f2ca252f36a0c8d046d2eb67b416}{socket\+\_\+t}} $\ast$exchange\+\_\+socket, \mbox{\hyperlink{data_8h_a20a07aa5a0a4656891f77115d03fd436}{generic}} content, \mbox{\hyperlink{data_8h_a57650d9f60e214a3790f5c086ac1876c}{fct\+\_\+ptr}} serializer\+\_\+fct,...)
+\begin{DoxyCompactList}\small\item\em send a request/response on a socket (stream or datagram) \end{DoxyCompactList}\item 
+ssize\+\_\+t \mbox{\hyperlink{data_8h_aed96e3639668d1338c04ac6e774fb0e3}{receive\+\_\+message}} (\mbox{\hyperlink{session_8h_a5ef0f2ca252f36a0c8d046d2eb67b416}{socket\+\_\+t}} $\ast$exchange\+\_\+socket, \mbox{\hyperlink{data_8h_a20a07aa5a0a4656891f77115d03fd436}{generic}} content, \mbox{\hyperlink{data_8h_a57650d9f60e214a3790f5c086ac1876c}{fct\+\_\+ptr}} deserializer\+\_\+fct)
+\begin{DoxyCompactList}\small\item\em receive a request/response on a socket (stream or datagram) \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Data Representation Layer Specification. 
+
+\begin{DoxyDate}{Date}
+2024-\/04-\/24 
+\end{DoxyDate}
+\begin{DoxyVersion}{Version}
+1.\+0 
+\end{DoxyVersion}
+\begin{DoxyAuthor}{Authors}
+
+\begin{DoxyItemize}
+\item TELLIER--CALOONE Tom
+\item DELANNOY Anaël 
+\end{DoxyItemize}
+\end{DoxyAuthor}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{data_8h_aed96e3639668d1338c04ac6e774fb0e3}\label{data_8h_aed96e3639668d1338c04ac6e774fb0e3}} 
+\index{data.h@{data.h}!receive\_message@{receive\_message}}
+\index{receive\_message@{receive\_message}!data.h@{data.h}}
+\doxysubsubsection{\texorpdfstring{receive\_message()}{receive\_message()}}
+{\footnotesize\ttfamily ssize\+\_\+t receive\+\_\+message (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{session_8h_a5ef0f2ca252f36a0c8d046d2eb67b416}{socket\+\_\+t}} $\ast$}]{exchange\+\_\+socket,  }\item[{\mbox{\hyperlink{data_8h_a20a07aa5a0a4656891f77115d03fd436}{generic}}}]{content,  }\item[{\mbox{\hyperlink{data_8h_a57650d9f60e214a3790f5c086ac1876c}{fct\+\_\+ptr}}}]{deserializer\+\_\+fct }\end{DoxyParamCaption})}
+
+
+
+receive a request/response on a socket (stream or datagram) 
+
+
+\begin{DoxyParams}{Parameters}
+{\em exchange\+\_\+socket} & exchange socket to use for receiving \\
+\hline
+{\em content} & request/response received after deserializing the reception buffer \\
+\hline
+{\em deserializer\+\_\+fct} & pointer to the request/response deserialization function \\
+\hline
+\end{DoxyParams}
+\begin{DoxyNote}{Note}
+if the deserializer\+\_\+fct parameter is NULL then content is a string 
+\end{DoxyNote}
+\begin{DoxyReturn}{Returns}
+content parameter modified with the received request/response 
+\end{DoxyReturn}
+\mbox{\Hypertarget{data_8h_ae83ef05d8f542cc295814dad007234f3}\label{data_8h_ae83ef05d8f542cc295814dad007234f3}} 
+\index{data.h@{data.h}!send\_message@{send\_message}}
+\index{send\_message@{send\_message}!data.h@{data.h}}
+\doxysubsubsection{\texorpdfstring{send\_message()}{send\_message()}}
+{\footnotesize\ttfamily ssize\+\_\+t send\+\_\+message (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{session_8h_a5ef0f2ca252f36a0c8d046d2eb67b416}{socket\+\_\+t}} $\ast$}]{exchange\+\_\+socket,  }\item[{\mbox{\hyperlink{data_8h_a20a07aa5a0a4656891f77115d03fd436}{generic}}}]{content,  }\item[{\mbox{\hyperlink{data_8h_a57650d9f60e214a3790f5c086ac1876c}{fct\+\_\+ptr}}}]{serializer\+\_\+fct,  }\item[{}]{... }\end{DoxyParamCaption})}
+
+
+
+send a request/response on a socket (stream or datagram) 
+
+
+\begin{DoxyParams}{Parameters}
+{\em exchange\+\_\+socket} & exchange socket to use for sending \\
+\hline
+{\em content} & request/response to serialize before sending \\
+\hline
+{\em serializer\+\_\+fct} & pointer to the request/response serialization function \\
+\hline
+{\em ...} & if the mode is DGRAM, the call requires the IP address and the port \\
+\hline
+\end{DoxyParams}
+\begin{DoxyNote}{Note}
+if the serializer\+\_\+fct parameter is NULL then content is a string 
+
+if the mode is DGRAM, the call requires the IP address and the port 
+\end{DoxyNote}
+\begin{DoxyReturn}{Returns}
+exchange\+\_\+socket parameter modified for the DGRAM mode 
+\end{DoxyReturn}

@@ -1,0 +1,92 @@
+\hypertarget{player__functions_8c}{}\doxysection{server/player\+\_\+functions.c File Reference}
+\label{player__functions_8c}\index{server/player\_functions.c@{server/player\_functions.c}}
+
+
+Functions to manage players.  
+
+
+{\ttfamily \#include \char`\"{}player\+\_\+functions.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}court\+\_\+functions.\+h\char`\"{}}\newline
+Include dependency graph for player\+\_\+functions.\+c\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{player__functions_8c__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{player__functions_8c_a59799c46d32caecb9343c85a370dab7c}{add\+\_\+player}} (\mbox{\hyperlink{structplayer}{player\+\_\+t}} \mbox{\hyperlink{structplayer}{player}})
+\begin{DoxyCompactList}\small\item\em Adds a player to the list of available players. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{player__functions_8c_acfc5f3a18bb7161447166a08bf85ba0c}{remove\+\_\+player}} (int id)
+\begin{DoxyCompactList}\small\item\em Removes a player from the list of available players (if they are invited) \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{player__functions_8c_a0e1fc9f027b88f884fd0e091ba966145}\label{player__functions_8c_a0e1fc9f027b88f884fd0e091ba966145}} 
+void {\bfseries invited\+\_\+player} (\mbox{\hyperlink{session_8h_a5ef0f2ca252f36a0c8d046d2eb67b416}{socket\+\_\+t}} $\ast$client\+\_\+socket, char $\ast$data)
+\item 
+\mbox{\Hypertarget{player__functions_8c_a1ab2345924da7d8d50f14dd498ed07fd}\label{player__functions_8c_a1ab2345924da7d8d50f14dd498ed07fd}} 
+int {\bfseries invite\+\_\+player} (\mbox{\hyperlink{session_8h_a5ef0f2ca252f36a0c8d046d2eb67b416}{socket\+\_\+t}} host\+\_\+socket, int id, \mbox{\hyperlink{structplayer}{player\+\_\+t}} $\ast$host, \mbox{\hyperlink{structplayer}{player\+\_\+t}} $\ast$partner\+\_\+player)
+\item 
+\mbox{\Hypertarget{player__functions_8c_a8ba4a622eceb1921bcbb107faaf82b67}\label{player__functions_8c_a8ba4a622eceb1921bcbb107faaf82b67}} 
+void {\bfseries list\+\_\+players} (\mbox{\hyperlink{session_8h_a5ef0f2ca252f36a0c8d046d2eb67b416}{socket\+\_\+t}} $\ast$host\+\_\+socket)
+\item 
+\mbox{\Hypertarget{player__functions_8c_afe74ceabfbf0e6cf107cb65a2ef8b828}\label{player__functions_8c_afe74ceabfbf0e6cf107cb65a2ef8b828}} 
+void {\bfseries host\+\_\+player} (\mbox{\hyperlink{session_8h_a5ef0f2ca252f36a0c8d046d2eb67b416}{socket\+\_\+t}} $\ast$client\+\_\+socket, char $\ast$data)
+\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{player__functions_8c_a72c30a8646849c54d0593ca606f97e24}\label{player__functions_8c_a72c30a8646849c54d0593ca606f97e24}} 
+\mbox{\hyperlink{structplayer__node}{player\+\_\+node\+\_\+t}} $\ast$ {\bfseries players} = NULL
+\item 
+\mbox{\Hypertarget{player__functions_8c_a6baa84d077090e323b2c00f2c43a4560}\label{player__functions_8c_a6baa84d077090e323b2c00f2c43a4560}} 
+pthread\+\_\+mutex\+\_\+t {\bfseries players\+\_\+mutex} = PTHREAD\+\_\+\+MUTEX\+\_\+\+INITIALIZER
+\item 
+\mbox{\Hypertarget{player__functions_8c_a76ef379977ba54582ca2f96294d2e8f4}\label{player__functions_8c_a76ef379977ba54582ca2f96294d2e8f4}} 
+int {\bfseries player\+\_\+id\+\_\+counter} = 0
+\item 
+\mbox{\Hypertarget{player__functions_8c_a27e5f7f672aa014927fec28e67ff7421}\label{player__functions_8c_a27e5f7f672aa014927fec28e67ff7421}} 
+pthread\+\_\+mutex\+\_\+t {\bfseries id\+\_\+counter\+\_\+mutex} = PTHREAD\+\_\+\+MUTEX\+\_\+\+INITIALIZER
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Functions to manage players. 
+
+\begin{DoxyDate}{Date}
+2024-\/05-\/02 
+\end{DoxyDate}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{player__functions_8c_a59799c46d32caecb9343c85a370dab7c}\label{player__functions_8c_a59799c46d32caecb9343c85a370dab7c}} 
+\index{player\_functions.c@{player\_functions.c}!add\_player@{add\_player}}
+\index{add\_player@{add\_player}!player\_functions.c@{player\_functions.c}}
+\doxysubsubsection{\texorpdfstring{add\_player()}{add\_player()}}
+{\footnotesize\ttfamily void add\+\_\+player (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structplayer}{player\+\_\+t}}}]{player }\end{DoxyParamCaption})}
+
+
+
+Adds a player to the list of available players. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em player} & player to add (structure) \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{player__functions_8c_acfc5f3a18bb7161447166a08bf85ba0c}\label{player__functions_8c_acfc5f3a18bb7161447166a08bf85ba0c}} 
+\index{player\_functions.c@{player\_functions.c}!remove\_player@{remove\_player}}
+\index{remove\_player@{remove\_player}!player\_functions.c@{player\_functions.c}}
+\doxysubsubsection{\texorpdfstring{remove\_player()}{remove\_player()}}
+{\footnotesize\ttfamily void remove\+\_\+player (\begin{DoxyParamCaption}\item[{int}]{id }\end{DoxyParamCaption})}
+
+
+
+Removes a player from the list of available players (if they are invited) 
+
+
+\begin{DoxyParams}{Parameters}
+{\em id} & player\textquotesingle{}s id \\
+\hline
+\end{DoxyParams}

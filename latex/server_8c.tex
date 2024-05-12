@@ -1,0 +1,75 @@
+\hypertarget{server_8c}{}\doxysection{server/server.c File Reference}
+\label{server_8c}\index{server/server.c@{server/server.c}}
+
+
+Server side of the application.  
+
+
+{\ttfamily \#include \char`\"{}server.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}player\+\_\+functions.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}court\+\_\+functions.\+h\char`\"{}}\newline
+Include dependency graph for server.\+c\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{server_8c__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{server_8c_a3c04138a5bfe5d72780bb7e82a18e627}\label{server_8c_a3c04138a5bfe5d72780bb7e82a18e627}} 
+int {\bfseries main} (int argc, char $\ast$$\ast$argv)
+\item 
+void \mbox{\hyperlink{server_8c_abd9f7bd43ac2b11d8e02b533314ab2ad}{listen\+\_\+thread}} (void $\ast$\mbox{\hyperlink{structsocket}{socket}})
+\begin{DoxyCompactList}\small\item\em Thread to listen to a client. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{server_8c_ab10c0c50c02a59ae9bd74c78c49b559d}{sigint\+\_\+handler}} (int signum)
+\begin{DoxyCompactList}\small\item\em Signal handler for SIGINT, closing the socket properly. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{server_8c_aeecd3baa15eb20e5acff5c1bcb7b4bc2}\label{server_8c_aeecd3baa15eb20e5acff5c1bcb7b4bc2}} 
+\mbox{\hyperlink{session_8h_a5ef0f2ca252f36a0c8d046d2eb67b416}{socket\+\_\+t}} {\bfseries listen\+\_\+socket}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Server side of the application. 
+
+\begin{DoxyDate}{Date}
+2024-\/04-\/30 
+\end{DoxyDate}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{server_8c_abd9f7bd43ac2b11d8e02b533314ab2ad}\label{server_8c_abd9f7bd43ac2b11d8e02b533314ab2ad}} 
+\index{server.c@{server.c}!listen\_thread@{listen\_thread}}
+\index{listen\_thread@{listen\_thread}!server.c@{server.c}}
+\doxysubsubsection{\texorpdfstring{listen\_thread()}{listen\_thread()}}
+{\footnotesize\ttfamily void listen\+\_\+thread (\begin{DoxyParamCaption}\item[{void $\ast$}]{socket }\end{DoxyParamCaption})}
+
+
+
+Thread to listen to a client. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em socket} & client socket created after an accept \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{server_8c_ab10c0c50c02a59ae9bd74c78c49b559d}\label{server_8c_ab10c0c50c02a59ae9bd74c78c49b559d}} 
+\index{server.c@{server.c}!sigint\_handler@{sigint\_handler}}
+\index{sigint\_handler@{sigint\_handler}!server.c@{server.c}}
+\doxysubsubsection{\texorpdfstring{sigint\_handler()}{sigint\_handler()}}
+{\footnotesize\ttfamily void sigint\+\_\+handler (\begin{DoxyParamCaption}\item[{int}]{signum }\end{DoxyParamCaption})}
+
+
+
+Signal handler for SIGINT, closing the socket properly. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em signum} & unused \\
+\hline
+\end{DoxyParams}

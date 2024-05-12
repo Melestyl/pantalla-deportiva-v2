@@ -1,0 +1,116 @@
+\hypertarget{court__functions_8c}{}\doxysection{server/court\+\_\+functions.c File Reference}
+\label{court__functions_8c}\index{server/court\_functions.c@{server/court\_functions.c}}
+
+
+Functions to manage courts.  
+
+
+{\ttfamily \#include \char`\"{}court\+\_\+functions.\+h\char`\"{}}\newline
+Include dependency graph for court\+\_\+functions.\+c\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{court__functions_8c__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{court__functions_8c_a0feed7ec3755a6bb9d5db777788e59b9}{add\+\_\+court}} (\mbox{\hyperlink{structcourt}{court\+\_\+t}} \mbox{\hyperlink{structcourt}{court}})
+\begin{DoxyCompactList}\small\item\em Adds a court to the list of available courts. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{court__functions_8c_aad54f7963edd5bc3b3584315f03babe4}{remove\+\_\+court}} (int id)
+\begin{DoxyCompactList}\small\item\em Removes a court from the list of available courts. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{court__functions_8c_a7029a7c2641d8cb583179b6f3e48cd63}\label{court__functions_8c_a7029a7c2641d8cb583179b6f3e48cd63}} 
+void {\bfseries new\+\_\+court} (void $\ast$\mbox{\hyperlink{structsocket}{socket}}, char $\ast$ip)
+\item 
+\mbox{\hyperlink{structcourt}{court\+\_\+t}} $\ast$ \mbox{\hyperlink{court__functions_8c_af6478ade4e3817aea29a2e018d7d81b3}{get\+\_\+first\+\_\+available\+\_\+court}} ()
+\begin{DoxyCompactList}\small\item\em Returns the first available court. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{court__functions_8c_a86f63db8917ee16ce4b45767fb54c2c9}{reserve\+\_\+court}} (\mbox{\hyperlink{structplayer}{player\+\_\+t}} p1, \mbox{\hyperlink{structplayer}{player\+\_\+t}} p2)
+\begin{DoxyCompactList}\small\item\em Reserves a court for two players. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{court__functions_8c_a9d427b181d983024392a9e624b40327e}\label{court__functions_8c_a9d427b181d983024392a9e624b40327e}} 
+\mbox{\hyperlink{structcourt__node}{court\+\_\+node\+\_\+t}} $\ast$ {\bfseries courts} = NULL
+\item 
+\mbox{\Hypertarget{court__functions_8c_a7484ee94249f1288974af4075292b8ba}\label{court__functions_8c_a7484ee94249f1288974af4075292b8ba}} 
+pthread\+\_\+mutex\+\_\+t {\bfseries courts\+\_\+mutex} = PTHREAD\+\_\+\+MUTEX\+\_\+\+INITIALIZER
+\item 
+\mbox{\Hypertarget{court__functions_8c_a9a14d064026b76e512d18841451d7f09}\label{court__functions_8c_a9a14d064026b76e512d18841451d7f09}} 
+int {\bfseries court\+\_\+id\+\_\+counter} = 0
+\item 
+\mbox{\Hypertarget{court__functions_8c_aa4a8ba3e5832bf0881da0e2425e3826c}\label{court__functions_8c_aa4a8ba3e5832bf0881da0e2425e3826c}} 
+pthread\+\_\+mutex\+\_\+t {\bfseries court\+\_\+id\+\_\+counter\+\_\+mutex} = PTHREAD\+\_\+\+MUTEX\+\_\+\+INITIALIZER
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Functions to manage courts. 
+
+\begin{DoxyDate}{Date}
+2024-\/05-\/02 
+\end{DoxyDate}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{court__functions_8c_a0feed7ec3755a6bb9d5db777788e59b9}\label{court__functions_8c_a0feed7ec3755a6bb9d5db777788e59b9}} 
+\index{court\_functions.c@{court\_functions.c}!add\_court@{add\_court}}
+\index{add\_court@{add\_court}!court\_functions.c@{court\_functions.c}}
+\doxysubsubsection{\texorpdfstring{add\_court()}{add\_court()}}
+{\footnotesize\ttfamily void add\+\_\+court (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structcourt}{court\+\_\+t}}}]{court }\end{DoxyParamCaption})}
+
+
+
+Adds a court to the list of available courts. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em court} & court to add (structure) \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{court__functions_8c_af6478ade4e3817aea29a2e018d7d81b3}\label{court__functions_8c_af6478ade4e3817aea29a2e018d7d81b3}} 
+\index{court\_functions.c@{court\_functions.c}!get\_first\_available\_court@{get\_first\_available\_court}}
+\index{get\_first\_available\_court@{get\_first\_available\_court}!court\_functions.c@{court\_functions.c}}
+\doxysubsubsection{\texorpdfstring{get\_first\_available\_court()}{get\_first\_available\_court()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structcourt}{court\+\_\+t}} $\ast$ get\+\_\+first\+\_\+available\+\_\+court (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Returns the first available court. 
+
+\begin{DoxyReturn}{Returns}
+
+\end{DoxyReturn}
+\mbox{\Hypertarget{court__functions_8c_aad54f7963edd5bc3b3584315f03babe4}\label{court__functions_8c_aad54f7963edd5bc3b3584315f03babe4}} 
+\index{court\_functions.c@{court\_functions.c}!remove\_court@{remove\_court}}
+\index{remove\_court@{remove\_court}!court\_functions.c@{court\_functions.c}}
+\doxysubsubsection{\texorpdfstring{remove\_court()}{remove\_court()}}
+{\footnotesize\ttfamily void remove\+\_\+court (\begin{DoxyParamCaption}\item[{int}]{id }\end{DoxyParamCaption})}
+
+
+
+Removes a court from the list of available courts. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em id} & court\textquotesingle{}s id to remove \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{court__functions_8c_a86f63db8917ee16ce4b45767fb54c2c9}\label{court__functions_8c_a86f63db8917ee16ce4b45767fb54c2c9}} 
+\index{court\_functions.c@{court\_functions.c}!reserve\_court@{reserve\_court}}
+\index{reserve\_court@{reserve\_court}!court\_functions.c@{court\_functions.c}}
+\doxysubsubsection{\texorpdfstring{reserve\_court()}{reserve\_court()}}
+{\footnotesize\ttfamily void reserve\+\_\+court (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structplayer}{player\+\_\+t}}}]{p1,  }\item[{\mbox{\hyperlink{structplayer}{player\+\_\+t}}}]{p2 }\end{DoxyParamCaption})}
+
+
+
+Reserves a court for two players. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em p1} & player 1 \\
+\hline
+{\em p2} & player 2 \\
+\hline
+\end{DoxyParams}
