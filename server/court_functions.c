@@ -130,15 +130,39 @@ court_t* get_first_available_court() {
  * @param court: court structure with all data
  */
 void listen_for_score(court_t* court) {
-	message_t received_msg;
+	message_t received_msg, send_msg;
 
 	do {
 		receive_message(court->socket, &received_msg, deserialize_message);
+
 		if (received_msg.code == (char) SCORE) {
+			// Copying the score
 			strcpy(court->score, received_msg.data);
 			printf("Court %d: %s\n", court->id, court->score);
 		}
+		else if (received_msg.code == (char) END_MATCH) {
+			// Removing the court from the list
+			court->available = 1;
+			printf("Court %d is now available\n", court->id);
+		}
+
+		// Sending OK to the court
+		prepare_message(&send_msg, (char) OK, "");
+		send_message(court->socket, &send_msg, serialize_message);
+		sleep(1);
 	} while (received_msg.code != (char) END_MATCH);
+}
+
+int court_available() {
+	court_node_t* current = courts;
+
+	while (current != NULL) {
+		if (current->court.available)
+			return 1;
+		current = current->next;
+	}
+
+	return 0;
 }
 
 /**

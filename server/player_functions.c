@@ -268,5 +268,5 @@ void host_player(socket_t* client_socket, char* data) {
 				send_message(client_socket, &send_msg, serialize_message);
 				break;
 		}
-	} while (received_msg.code != (char) PLAY_WITH && partner_found == 0);
+	} while (!partner_found);
 }

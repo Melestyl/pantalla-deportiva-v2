@@ -37,6 +37,7 @@ int main(int argc, char** argv) {
 								NULL,
 								(void*) listen_thread,
 								(void*) &client_socket);
+		sleep(1); // Wait for proper copy of the socket in the created thread
 	}
 
 	// Closing socket
@@ -52,20 +53,27 @@ int main(int argc, char** argv) {
  */
 void listen_thread(void* socket) {
 	socket_t* client_socket = (socket_t *) socket;
+	socket_t client_socket_copy;
 	message_t message;
 	buffer_t ip;
 	int port;
 
-	strcpy(ip, inet_ntoa(((struct sockaddr_in*)&client_socket->remote_address)->sin_addr));
-	port = ntohs(((struct sockaddr_in*)&client_socket->remote_address)->sin_port);
+	// Creating a copy of the socket because other threads will overwrite it
+	client_socket_copy.file_descriptor = client_socket->file_descriptor;
+	client_socket_copy.remote_address = client_socket->remote_address;
+	client_socket_copy.local_address = client_socket->local_address;
+	client_socket_copy.mode = client_socket->mode;
+
+	strcpy(ip, inet_ntoa(((struct sockaddr_in*)&client_socket_copy.remote_address)->sin_addr));
+	port = ntohs(((struct sockaddr_in*)&client_socket_copy.remote_address)->sin_port);
 
 	// Receiving message from the client
-	receive_message(client_socket, &message, deserialize_message);
+	receive_message(&client_socket_copy, &message, deserialize_message);
 
 	// Rejecting if the client is not trying to authenticate first
 	if (message.code != AUTH) {
 		fprintf(stderr, "[%s:%d] has sent a non-auth request and is not authenticated.\n", ip, port);
-		close(client_socket->file_descriptor);
+		close(client_socket_copy.file_descriptor);
 		return;
 	}
 
@@ -74,25 +82,25 @@ void listen_thread(void* socket) {
 		// Player who invites
 		case '1':
 			printf("[%s:%d] is a player who invites.\n", ip, port);
-			host_player(client_socket, message.data);
+			host_player(&client_socket_copy, message.data);
 			break;
 
 		// Player who is invited
 		case '2':
 			printf("[%s:%d] is a player who is invited.\n", ip, port);
-			invited_player(client_socket, message.data);
+			invited_player(&client_socket_copy, message.data);
 			break;
 
 		// Court
 		case '3':
 			printf("[%s:%d] is a court.\n", ip, port);
-			new_court(client_socket, ip);
+			new_court(&client_socket_copy, ip);
 			break;
 
 		// Spectator
 		case '4':
 			printf("[%s:%d] is a spectator.\n", ip, port);
-			spectator_function(client_socket);
+			spectator_function(&client_socket_copy);
 			break;
 
 		// Unknown
